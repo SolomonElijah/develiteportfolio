@@ -21,7 +21,8 @@ function getReadingTime(content: string): number {
 }
 
 // Helper to format date
-function formatDate(dateString: string): string {
+function formatDate(dateString: string | undefined): string {
+  if (!dateString) return 'Date unavailable'
   return new Date(dateString).toLocaleDateString('en-US', {
     year: 'numeric',
     month: 'long',
