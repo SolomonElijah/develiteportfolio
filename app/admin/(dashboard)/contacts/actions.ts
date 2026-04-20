@@ -80,5 +80,5 @@ export async function getAllContactEmails() {
     .select('email')
     .order('created_at', { ascending: false })
 
-  return [...new Set((data || []).map(c => c.email).filter(Boolean))]
+  return Array.from(new Set((data || []).map(c => c.email).filter(Boolean)))
 }
