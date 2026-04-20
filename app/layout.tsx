@@ -8,7 +8,7 @@ import Footer from '@/components/Footer'
 const inter = Inter({ subsets: ['latin'] })
 
 export const metadata: Metadata = {
-  metadataBase: new URL('https://solomonelijah.dev'),
+  metadataBase: new URL('https://solomonelijah.online'),
   title: {
     default: 'Solomon Elijah - Full-Stack Developer | Building Scalable Systems',
     template: '%s | Solomon Elijah',
@@ -32,7 +32,7 @@ export const metadata: Metadata = {
   openGraph: {
     type: 'website',
     locale: 'en_US',
-    url: 'https://solomonelijah.dev',
+    url: 'https://solomonelijah.online',
     siteName: 'Solomon Elijah - Developer Portfolio',
     title: 'Solomon Elijah - Full-Stack Developer | Building Scalable Systems',
     description: 'Full-Stack Software Developer specializing in building production-ready web apps, mobile apps, APIs, and scalable platforms.',
@@ -76,7 +76,7 @@ export default function RootLayout({
   return (
     <html lang="en" suppressHydrationWarning>
       <head>
-        <link rel="canonical" href="https://solomonelijah.dev" />
+        <link rel="canonical" href="https://solomonelijah.online" />
         <link rel="icon" href="/favicon.ico" />
         <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
         <meta name="theme-color" content="#0B1120" />

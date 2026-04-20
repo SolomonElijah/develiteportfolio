@@ -122,7 +122,7 @@ export const developer = {
   name: 'Solomon Elijah',
   role: 'Full‑Stack Software Web and Mobile Developer',
   yearsExperience: 5,
-  projectsDelivered: 20,
+  projectsDelivered: 50,
   apiRequests: 50,
   uptime: 99.99,
   email: 'contact@solomonelijah.com',
