@@ -12,7 +12,7 @@ export default function BulkEmailButton({ contacts }: BulkEmailButtonProps) {
   const [showModal, setShowModal] = useState(false)
   const [sending, setSending] = useState(false)
 
-  const uniqueEmails = [...new Set(contacts.map(c => c.email).filter(Boolean))]
+  const uniqueEmails = Array.from(new Set(contacts.map(c => c.email).filter(Boolean)))
 
   const handleSend = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault()
