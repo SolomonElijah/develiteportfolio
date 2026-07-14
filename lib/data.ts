@@ -125,8 +125,8 @@ export const developer = {
   projectsDelivered: 50,
   apiRequests: 50,
   uptime: 99.99,
-  email: 'contact@solomonelijah.com',
-  phone: '++2349032236191', // optional
+  email: 'solomonelijahsunday1@gmail.com',
+  phone: '+2349032236191', // optional
   location: 'Lagos, Nigeria', // optional
   github: 'https://github.com/solomonelijah',
   linkedin: 'https://linkedin.com/in/solomonelijah',

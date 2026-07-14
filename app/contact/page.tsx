@@ -209,7 +209,7 @@ export default function ContactPage() {
                 Send Message
               </button>
               <p className="text-xs text-center text-slate-500 dark:text-gray-400 mt-4">
-                I'll never share your email. You'll receive a reply within 1 hour.
+                I'll never share your email. You'll receive a reply within 10 minutes.
               </p>
             </form>
           </div>
