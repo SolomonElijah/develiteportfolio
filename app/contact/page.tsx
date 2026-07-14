@@ -29,7 +29,7 @@ export default function ContactPage() {
         <p className="text-lg text-slate-600 dark:text-gray-400">
           I'm currently available for freelance projects or full‑time roles.
           Tell me about your project and I'll get back to you within{' '}
-          <span className="font-medium text-blue-600 dark:text-blue-400">1 hour</span>.
+          <span className="font-medium text-blue-600 dark:text-blue-400">10 minutes</span>.
         </p>
       </div>
 
@@ -82,7 +82,7 @@ export default function ContactPage() {
                 <ClockIcon className="w-5 h-5 text-slate-400 dark:text-gray-500 shrink-0 mt-0.5" />
                 <div>
                   <p className="text-sm text-slate-500 dark:text-gray-400">Response Time</p>
-                  <p className="text-slate-700 dark:text-gray-300">Within 1 hour (business hours)</p>
+                  <p className="text-slate-700 dark:text-gray-300">Within 10 minutes </p>
                 </div>
               </li>
             </ul>
