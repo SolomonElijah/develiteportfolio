@@ -70,7 +70,7 @@ export default function Hero() {
             </a>
           </div>
 
-          {/* Quick Stats */}
+          {/* Quick Stats*/}
           <div className="flex gap-6 pt-4 border-t border-gray-200 dark:border-gray-800">
             <div>
               <p className="text-2xl font-bold text-slate-900 dark:text-white">
