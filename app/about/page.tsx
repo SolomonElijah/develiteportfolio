@@ -4,6 +4,34 @@ import { developer, skillGroups, siteUrl } from '@/lib/profile'
 import { pageMetadata, personSchema, serializeJsonLd } from '@/lib/seo'
 import Arrow from '@/components/Arrow'
 import ContactBanner from '@/components/ContactBanner'
+const faqs = [
+  {
+    question: 'Who is Solomon Elijah and what does he specialize in?',
+    answer:
+      'Solomon Elijah is a full-stack software developer based in Lagos, Nigeria. He specializes in designing and building high-performance web applications, cross-platform mobile apps, and scalable backend REST APIs using Next.js, React, React Native, Laravel, Node.js, and PostgreSQL.',
+  },
+  {
+    question: 'What core technologies and frameworks does Solomon Elijah use?',
+    answer:
+      'On the frontend and mobile, Solomon works with React, Next.js (App Router, Server Components, SSR), TypeScript, React Native, Expo, and Tailwind CSS. On the backend, he builds with Laravel, Node.js, Express, PostgreSQL, MySQL, Redis, and Supabase.',
+  },
+  {
+    question: 'What kinds of production systems has Solomon Elijah built?',
+    answer:
+      'Solomon has engineered high-concurrency fintech and utility bills payment platforms (NexaPoint), vehicle loan and pre-order marketplaces, multi-leg flight booking platforms (United Airways), offline-first delivery package tracking mobile apps, and real estate portals (EstateZone).',
+  },
+  {
+    question: 'Does Solomon Elijah build offline-first mobile applications?',
+    answer:
+      'Yes. Solomon architects React Native applications with embedded SQLite, optimistic UI state updates, outbox queue patterns, and background synchronization to guarantee reliable app performance even with zero network connectivity.',
+  },
+  {
+    question: 'Is Solomon Elijah available for full-time roles, contracts, or remote work?',
+    answer:
+      'Yes. Solomon is open to full-time engineering roles, technical contracting, and remote software engineering opportunities worldwide. You can connect directly via the contact form or email solomonelijahsunday1@gmail.com.',
+  },
+]
+
 export const metadata = pageMetadata(
   'About',
   'Meet Solomon Elijah, a full-stack software developer in Lagos, Nigeria. Explore his approach to web applications, backend APIs, and React Native mobile development.',
@@ -17,9 +45,24 @@ export default function AboutPage() {
         dangerouslySetInnerHTML={{
           __html: serializeJsonLd({
             '@context': 'https://schema.org',
-            '@type': 'ProfilePage',
-            url: `${siteUrl}/about`,
-            mainEntity: personSchema,
+            '@graph': [
+              {
+                '@type': 'ProfilePage',
+                url: `${siteUrl}/about`,
+                mainEntity: personSchema,
+              },
+              {
+                '@type': 'FAQPage',
+                mainEntity: faqs.map((faq) => ({
+                  '@type': 'Question',
+                  name: faq.question,
+                  acceptedAnswer: {
+                    '@type': 'Answer',
+                    text: faq.answer,
+                  },
+                })),
+              },
+            ],
           }),
         }}
       />
@@ -150,6 +193,49 @@ export default function AboutPage() {
               </article>
             ))}
           </div>
+        </div>
+      </section>
+      <section className="container section" aria-labelledby="faq-heading">
+        <div className="section-heading">
+          <div>
+            <p className="eyebrow">COMMON QUESTIONS & QUICK ANSWERS</p>
+            <h2 id="faq-heading">Frequently Asked Questions</h2>
+          </div>
+        </div>
+        <div
+          style={{
+            display: 'grid',
+            gridTemplateColumns: 'repeat(auto-fit, minmax(320px, 1fr))',
+            gap: '24px',
+            marginTop: '36px',
+          }}
+        >
+          {faqs.map((faq, idx) => (
+            <article
+              key={faq.question}
+              className="capability-card"
+              style={{
+                display: 'flex',
+                flexDirection: 'column',
+                gap: '12px',
+              }}
+            >
+              <span className="capability-number">0{idx + 1}</span>
+              <h3 style={{ fontSize: '18px', fontWeight: 600, margin: 0 }}>
+                {faq.question}
+              </h3>
+              <p
+                style={{
+                  color: 'var(--muted)',
+                  fontSize: '14px',
+                  lineHeight: 1.6,
+                  margin: 0,
+                }}
+              >
+                {faq.answer}
+              </p>
+            </article>
+          ))}
         </div>
       </section>
       <div className="section">
