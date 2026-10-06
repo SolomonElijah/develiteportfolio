@@ -1,39 +1,56 @@
 import type { Metadata } from 'next'
 import { developer, siteUrl } from './profile'
+
 export function pageMetadata(
   title: string,
   description: string,
   path: string,
   image = '/opengraph-image',
 ): Metadata {
+  const fullTitle = `${title} | ${developer.name}`
+  const twitterHandle = '@solomonelijah'
+  const imageUrl = image.startsWith('http') ? image : `${siteUrl}${image}`
+
   return {
     title,
     description,
     alternates: { canonical: path },
     openGraph: {
-      title: `${title} | ${developer.name}`,
+      title: fullTitle,
       description,
       url: path,
+      siteName: 'Solomon Elijah — Portfolio',
+      locale: 'en_US',
       type: 'website',
-      images: [{ url: image, width: 1200, height: 630, alt: title }],
+      images: [
+        {
+          url: imageUrl,
+          width: 1200,
+          height: 630,
+          alt: fullTitle,
+        },
+      ],
     },
     twitter: {
       card: 'summary_large_image',
-      title,
+      site: twitterHandle,
+      creator: twitterHandle,
+      title: fullTitle,
       description,
-      images: [image],
+      images: [imageUrl],
     },
   }
 }
+
 export const personSchema = {
   '@type': 'Person',
   '@id': `${siteUrl}/#person`,
   name: developer.name,
   jobTitle: developer.role,
   url: siteUrl,
-  image: `${siteUrl}/images/me.jpg`,
+  image: `${siteUrl}/images/me.png`,
   email: developer.email,
-  sameAs: [developer.github, developer.linkedin],
+  sameAs: [developer.github, developer.linkedin, developer.twitter],
   homeLocation: { '@type': 'Place', name: developer.location },
   knowsAbout: [
     'React',
@@ -46,6 +63,7 @@ export const personSchema = {
     'PostgreSQL',
   ],
 }
+
 export function serializeJsonLd(value: unknown) {
   return JSON.stringify(value).replace(/</g, '\\u003c')
 }

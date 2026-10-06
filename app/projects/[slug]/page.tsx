@@ -19,6 +19,7 @@ export async function generateMetadata({ params }: Props) {
         project.title,
         project.description,
         `/projects/${project.slug}`,
+        project.image,
       )
     : { title: 'Project not found', robots: { index: false } }
 }

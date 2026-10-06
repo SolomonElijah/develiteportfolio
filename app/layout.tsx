@@ -18,17 +18,70 @@ export const metadata: Metadata = {
     template: '%s | Solomon Elijah',
   },
   description:
-    'Explore Solomon Elijah’s web, mobile, and API projects. Full-stack software developer based in Lagos, Nigeria, working with React, Next.js, Laravel, and React Native.',
-  authors: [{ name: developer.name }],
+    'Full-stack software developer based in Lagos, Nigeria, building reliable web and mobile applications with React, Next.js, TypeScript, React Native, Laravel, and Node.js.',
+  authors: [{ name: developer.name, url: siteUrl }],
   creator: developer.name,
+  publisher: developer.name,
+  keywords: [
+    'Solomon Elijah',
+    'Full-Stack Developer',
+    'Software Engineer',
+    'Next.js Developer',
+    'React Developer',
+    'React Native',
+    'Laravel',
+    'Node.js',
+    'Web Developer Lagos Nigeria',
+    'Mobile App Developer',
+    'Portfolio',
+  ],
+  alternates: {
+    canonical: '/',
+  },
   openGraph: {
     type: 'website',
-    locale: 'en_GB',
+    locale: 'en_US',
+    url: siteUrl,
     siteName: 'Solomon Elijah — Portfolio',
-    images: [{ url: '/opengraph-image', width: 1200, height: 630 }],
+    title: 'Solomon Elijah | Full-Stack Software Developer',
+    description:
+      'Full-stack software developer based in Lagos, Nigeria, building reliable web and mobile applications with React, Next.js, TypeScript, React Native, Laravel, and Node.js.',
+    images: [
+      {
+        url: '/opengraph-image',
+        width: 1200,
+        height: 630,
+        alt: 'Solomon Elijah — Full-Stack Software Developer',
+      },
+    ],
   },
-  twitter: { card: 'summary_large_image', images: ['/opengraph-image'] },
-  robots: { index: true, follow: true },
+  twitter: {
+    card: 'summary_large_image',
+    site: '@solomonelijah',
+    creator: '@solomonelijah',
+    title: 'Solomon Elijah | Full-Stack Software Developer',
+    description:
+      'Full-stack software developer based in Lagos, Nigeria, building reliable web and mobile applications with React, Next.js, TypeScript, React Native, Laravel, and Node.js.',
+    images: [
+      {
+        url: '/opengraph-image',
+        width: 1200,
+        height: 630,
+        alt: 'Solomon Elijah — Full-Stack Software Developer',
+      },
+    ],
+  },
+  robots: {
+    index: true,
+    follow: true,
+    googleBot: {
+      index: true,
+      follow: true,
+      'max-video-preview': -1,
+      'max-image-preview': 'large',
+      'max-snippet': -1,
+    },
+  },
   icons: { icon: '/icon.svg', apple: '/apple-touch-icon.png' },
 }
 export const viewport: Viewport = {
