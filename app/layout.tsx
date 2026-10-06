@@ -86,7 +86,9 @@ export const metadata: Metadata = {
     },
   },
   verification: {
-    google: process.env.NEXT_PUBLIC_GOOGLE_SITE_VERIFICATION || undefined,
+    google:
+      process.env.NEXT_PUBLIC_GOOGLE_SITE_VERIFICATION ||
+      'googled40ff624e8e1f0fe',
   },
   icons: { icon: '/icon.svg', apple: '/apple-touch-icon.png' },
 }
