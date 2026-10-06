@@ -103,16 +103,16 @@ export default async function ProjectDetailPage({ params }: Props) {
           <div className="detail-layout">
             <div>
               {[
-                {
-                  title: 'The problem',
-                  text: project.problem,
-                  isArchitecture: false,
-                },
-                {
-                  title: 'The approach',
-                  text: project.solution,
-                  isArchitecture: false,
-                },
+                // {
+                //   title: 'The problem',
+                //   text: project.problem,
+                //   isArchitecture: false,
+                // },
+                // {
+                //   title: 'The approach',
+                //   text: project.solution,
+                //   isArchitecture: false,
+                // },
                 {
                   title: 'Architecture & implementation',
                   text: project.architecture,
