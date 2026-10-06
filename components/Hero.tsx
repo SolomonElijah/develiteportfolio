@@ -7,7 +7,7 @@ export default function Hero() {
     <section className="container hero" aria-labelledby="hero-title">
       <div className="hero-copy">
         <div className="eyebrow">
-          <span className="status-dot" /> WEB · MOBILE · APIs
+          <span className="status-dot" /> FULL-STACK · MOBILE (RN & FLUTTER) · BACKEND
         </div>
         <p className="hero-intro">Hello, I’m Elijah.</p>
         <h1 id="hero-title">
@@ -17,9 +17,9 @@ export default function Hero() {
           <span className="accent">.</span>
         </h1>
         <p className="hero-description">
-          Software developer building reliable web and mobile applications with
-          modern technologies. From intuitive interfaces to scalable APIs and
-          everything in between.
+          Full-stack software developer building reliable web applications,
+          cross-platform mobile apps (React Native & Flutter), and scalable backend
+          APIs with modern architectures.
         </p>
 
         <div className="hero-actions">
@@ -51,7 +51,7 @@ export default function Hero() {
             </svg>
             {developer.location}
           </span>
-          <span>Web & mobile development</span>
+          <span>Full-Stack · Mobile (RN & Flutter) · Backend</span>
         </div>
       </div>
       <div className="hero-visual">

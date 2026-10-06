@@ -42,11 +42,12 @@ export default async function Home() {
             {[
               'Next.js',
               'React Native',
+              'Flutter',
               'TypeScript',
               'Laravel',
               'Node.js',
-              'MySQL',
               'PostgreSQL',
+              'MySQL',
             ].map((tech) => (
               <span key={tech}>{tech}</span>
             ))}

@@ -8,12 +8,12 @@ const faqs = [
   {
     question: 'Who is Solomon Elijah and what does he specialize in?',
     answer:
-      'Solomon Elijah is a full-stack software developer based in Lagos, Nigeria. He specializes in designing and building high-performance web applications, cross-platform mobile apps, and scalable backend REST APIs using Next.js, React, React Native, Laravel, Node.js, and PostgreSQL.',
+      'Solomon Elijah is a full-stack software developer based in Lagos, Nigeria. He specializes in designing and building high-performance web applications, cross-platform mobile apps (React Native & Flutter), and scalable backend REST APIs using Next.js, React, Laravel, Node.js, and PostgreSQL.',
   },
   {
     question: 'What core technologies and frameworks does Solomon Elijah use?',
     answer:
-      'On the frontend and mobile, Solomon works with React, Next.js (App Router, Server Components, SSR), TypeScript, React Native, Expo, and Tailwind CSS. On the backend, he builds with Laravel, Node.js, Express, PostgreSQL, MySQL, Redis, and Supabase.',
+      'On the frontend and mobile, Solomon works with React, Next.js (App Router, Server Components, SSR), TypeScript, React Native, Flutter, Dart, Expo, and Tailwind CSS. On the backend, he builds robust services with Laravel, Node.js, Express, PostgreSQL, MySQL, Redis, and Supabase.',
   },
   {
     question: 'What kinds of production systems has Solomon Elijah built?',
@@ -23,7 +23,7 @@ const faqs = [
   {
     question: 'Does Solomon Elijah build offline-first mobile applications?',
     answer:
-      'Yes. Solomon architects React Native applications with embedded SQLite, optimistic UI state updates, outbox queue patterns, and background synchronization to guarantee reliable app performance even with zero network connectivity.',
+      'Yes. Solomon architects cross-platform mobile applications in React Native and Flutter with local SQLite storage, optimistic UI state updates, outbox queue patterns, and background synchronization to guarantee reliable app performance even with zero network connectivity.',
   },
   {
     question: 'Is Solomon Elijah available for full-time roles, contracts, or remote work?',
@@ -34,7 +34,7 @@ const faqs = [
 
 export const metadata = pageMetadata(
   'About',
-  'Meet Solomon Elijah, a full-stack software developer in Lagos, Nigeria. Explore his approach to web applications, backend APIs, and React Native mobile development.',
+  'Meet Solomon Elijah, a full-stack software developer in Lagos, Nigeria. Explore his approach to web applications, backend APIs, and mobile app development (React Native & Flutter).',
   '/about',
 )
 export default function AboutPage() {
@@ -81,7 +81,7 @@ export default function AboutPage() {
             <p>
               I’m Solomon Elijah, a full-stack software developer based in
               Lagos, Nigeria. I build web and mobile applications, connecting
-              the interfaces people use with the services and data behind them.
+              the interfaces people use with the services, APIs, and data behind them.
             </p>
             <p>
               My portfolio includes vehicle marketplaces, shopping experiences,
@@ -90,10 +90,10 @@ export default function AboutPage() {
               to understand and use.
             </p>
             <p>
-              I work with React and Next.js for the web, React Native for
-              mobile, and Laravel and Node.js for backend development. I’m
-              interested in roles and projects where I can contribute across the
-              product and keep learning from the people around me.
+              I work with React and Next.js for the web, React Native and Flutter
+              for mobile development, and Laravel, Node.js, and PostgreSQL for
+              backend services. I build end-to-end full-stack solutions where interface,
+              APIs, and data pipelines work together reliably.
             </p>
           </div>
           <dl className="profile-facts">
@@ -103,15 +103,15 @@ export default function AboutPage() {
             </div>
             <div>
               <dt>Specialization</dt>
-              <dd>Web, mobile & APIs</dd>
+              <dd>Full-Stack · Mobile & Backend</dd>
             </div>
             <div>
-              <dt>Core frontend</dt>
-              <dd>React · Next.js · React Native · TypeScript</dd>
+              <dt>Web & Mobile</dt>
+              <dd>React · Next.js · React Native · Flutter · TypeScript</dd>
             </div>
             <div>
-              <dt>Core backend</dt>
-              <dd>Laravel · Node.js · MySQL · PostgreSQL</dd>
+              <dt>Backend & Data</dt>
+              <dd>Laravel · Node.js · PostgreSQL · MySQL · REST APIs</dd>
             </div>
           </dl>
           <div className="profile-links">

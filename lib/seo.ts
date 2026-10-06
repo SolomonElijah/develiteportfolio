@@ -58,14 +58,21 @@ export const personSchema = {
   sameAs: [developer.github, developer.linkedin, developer.twitter],
   homeLocation: { '@type': 'Place', name: developer.location },
   knowsAbout: [
+    'Full-Stack Software Development',
+    'Backend Architecture',
     'React',
     'Next.js',
     'TypeScript',
-    'Laravel',
     'React Native',
+    'Flutter',
+    'Dart',
+    'Laravel',
+    'Node.js',
+    'Express',
     'REST APIs',
-    'MySQL',
     'PostgreSQL',
+    'MySQL',
+    'Redis',
   ],
 }
 

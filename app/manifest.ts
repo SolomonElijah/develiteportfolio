@@ -6,7 +6,7 @@ export default function manifest(): MetadataRoute.Manifest {
     name: `${developer.name} — Full-Stack Software Developer`,
     short_name: developer.name,
     description:
-      'Full-stack software developer building web applications, mobile apps, and backend services with React, Next.js, TypeScript, React Native, and Laravel.',
+      'Full-stack software developer building web applications, mobile apps (React Native & Flutter), and backend APIs with React, Next.js, TypeScript, Laravel, and Node.js.',
     start_url: '/',
     display: 'standalone',
     background_color: '#f4f6fb',

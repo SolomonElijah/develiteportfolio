@@ -18,19 +18,24 @@ export const metadata: Metadata = {
     template: '%s | Solomon Elijah',
   },
   description:
-    'Full-stack software developer based in Lagos, Nigeria, building reliable web and mobile applications with React, Next.js, TypeScript, React Native, Laravel, and Node.js.',
+    'Full-stack software developer based in Lagos, Nigeria, building reliable web applications, mobile apps (React Native & Flutter), and scalable backend APIs with Next.js, Laravel, Node.js, and PostgreSQL.',
   authors: [{ name: developer.name, url: siteUrl }],
   creator: developer.name,
   publisher: developer.name,
   keywords: [
     'Solomon Elijah',
     'Full-Stack Developer',
+    'Backend Developer',
     'Software Engineer',
     'Next.js Developer',
     'React Developer',
     'React Native',
-    'Laravel',
-    'Node.js',
+    'Flutter Developer',
+    'Dart',
+    'Laravel Developer',
+    'Node.js Developer',
+    'PostgreSQL',
+    'REST API Architecture',
     'Web Developer Lagos Nigeria',
     'Mobile App Developer',
     'Portfolio',
@@ -45,7 +50,7 @@ export const metadata: Metadata = {
     siteName: 'Solomon Elijah — Portfolio',
     title: 'Solomon Elijah | Full-Stack Software Developer',
     description:
-      'Full-stack software developer based in Lagos, Nigeria, building reliable web and mobile applications with React, Next.js, TypeScript, React Native, Laravel, and Node.js.',
+      'Full-stack software developer based in Lagos, Nigeria, building reliable web applications, mobile apps (React Native & Flutter), and scalable backend APIs with Next.js, Laravel, Node.js, and PostgreSQL.',
     images: [
       {
         url: `${siteUrl}/og-image.png`,
@@ -71,7 +76,7 @@ export const metadata: Metadata = {
     creator: '@solomonelijah',
     title: 'Solomon Elijah | Full-Stack Software Developer',
     description:
-      'Full-stack software developer based in Lagos, Nigeria, building reliable web and mobile applications with React, Next.js, TypeScript, React Native, Laravel, and Node.js.',
+      'Full-stack software developer based in Lagos, Nigeria, building reliable web applications, mobile apps (React Native & Flutter), and scalable backend APIs with Next.js, Laravel, Node.js, and PostgreSQL.',
     images: [`${siteUrl}/og-image.png`],
   },
   robots: {

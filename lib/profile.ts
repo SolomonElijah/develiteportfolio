@@ -27,21 +27,27 @@ export const siteUrl = (
 ).replace(/\/$/, '')
 export const skillGroups = [
   {
-    title: 'Web experiences',
+    title: 'Web applications',
     description:
-      'Responsive interfaces with clear navigation, accessible interactions, and thoughtful performance.',
+      'Responsive, server-rendered interfaces with clear navigation, accessible interactions, and high performance.',
     skills: ['React', 'Next.js', 'TypeScript', 'Tailwind CSS'],
   },
   {
     title: 'Backend & APIs',
     description:
-      'Application logic, service integrations, and APIs that connect products to their data.',
-    skills: ['Laravel', 'PHP', 'Node.js', 'REST APIs'],
+      'Robust application logic, high-concurrency architecture, and secure REST APIs connecting products to their data.',
+    skills: ['Laravel', 'PHP', 'Node.js', 'Express', 'REST APIs', 'Redis'],
   },
   {
-    title: 'Mobile & data',
+    title: 'Mobile development',
     description:
-      'Mobile applications backed by structured data and reusable application services.',
-    skills: ['React Native', 'MySQL', 'PostgreSQL', 'MongoDB'],
+      'Cross-platform mobile applications with offline-first persistence, native integrations, and smooth user experiences.',
+    skills: ['React Native', 'Flutter', 'Dart', 'Expo', 'SQLite'],
+  },
+  {
+    title: 'Databases & data',
+    description:
+      'Relational and document database design, query optimization, indexing, and transactional integrity.',
+    skills: ['PostgreSQL', 'MySQL', 'MongoDB', 'Supabase'],
   },
 ]
