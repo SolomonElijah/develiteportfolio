@@ -1,0 +1,197 @@
+[
+  {
+    "slug": "car-marketplace-loan-pre-order-platform",
+    "title": "Car Marketplace & Loan Pre-Order Platform",
+    "type": "Web",
+    "description": "A modern car listing platform that allows users to browse vehicles, apply for loans, contact sellers, and pre-order cars with discounts. The system integrates financing logic, real-time listings, and optimized request flow for a smooth buying experience.",
+    "stack": [
+      "Frontend: Next.js, React",
+      "Backend: Laravel (API)",
+      "Database: MySQL"
+    ],
+    "problem": "Car buyers struggle with:\r\n\r\nScattered listings across multiple platforms\r\nNo integrated loan calculation or financing visibility\r\nPoor communication flow with sellers\r\nNo structured pre-order system for unavailable vehicles",
+    "solution": "This platform centralizes:\r\n\r\nVerified car listings\r\nBuilt-in loan system with down payment calculation\r\nDirect seller contact system\r\nPre-order feature with discount incentives\r\nOptimized UX for fast decision-making",
+    "architecture": "Frontend: Component-based UI (SSR + client hydration)\r\nBackend: REST API handling cars, loans, and user actions\r\nStorage: Cloud-based media storage (e.g., R2/S3)\r\nCaching: API caching + ETag system for performance\r\nAuth/Admin: Role-based access for managing listings",
+    "features": [
+      "Car listing with images, price, mileage, and location",
+      "Loan calculation with precomputed breakdown",
+      "“Apply for Loan” workflow",
+      "Direct “Contact Seller” integration",
+      "Pre-order system with discount incentives",
+      "Admin dashboard for managing inventory",
+      "Optimized API request + caching system"
+    ],
+    "image_url": "https://udkzxajwoxcppzthvzwz.supabase.co/storage/v1/object/public/projects/1776622345327-Screenshot%202026-03-01%20163112.png",
+    "demo_url": "https://www.ejccars.com/",
+    "featured": true
+  },
+  {
+    "slug": "fashion-e-commerce-mobile-app",
+    "title": "Fashion E-Commerce Mobile App",
+    "type": "Mobile",
+    "description": "A modern fashion shopping mobile interface designed for seamless product discovery, category browsing, and personalized recommendations. The UI focuses on simplicity, speed, and conversion-driven design patterns.",
+    "stack": [
+      "Frontend: React Native",
+      "Design: Figma",
+      "State Management: Context API / Redux",
+      "Backend : Laravel API"
+    ],
+    "problem": "Most fashion e-commerce apps:\r\n\r\nFeel cluttered and overwhelming\r\nHave poor product discovery flow\r\nLack personalization for users\r\nDon’t guide users effectively to purchase",
+    "solution": "This app provides:\r\n\r\nClean and minimal UI for easy navigation\r\nSmart product categorization\r\nPersonalized recommendations section\r\nPromotional banners for conversions\r\nFast search and filtering experience",
+    "architecture": "Mobile-first UI design system\r\nComponent-based structure (cards, categories, banners)\r\nState-driven rendering for recommendations and cart\r\nScalable design for backend/API integration",
+    "features": [
+      "Personalized welcome dashboard",
+      "Search bar with quick access",
+      "Search bar with quick access",
+      "Category filters (All, Clothes, Shoes, etc.)",
+      "Recommended products section",
+      "Wishlist (favorite/heart system)",
+      "Shopping cart with notification badge",
+      "Bottom navigation (Home, Search, Cart, Favorites, Profile)"
+    ],
+    "image_url": "https://udkzxajwoxcppzthvzwz.supabase.co/storage/v1/object/public/projects/1776623226191-2.png",
+    "demo_url": null,
+    "featured": true
+  },
+  {
+    "slug": "fintech-wallet-utility-payment-app",
+    "title": "Fintech Wallet & Utility Payment App",
+    "type": "Mobile",
+    "description": "A digital wallet application that enables users to manage funds, pay bills, purchase airtime/data, and track transactions in one centralized platform. The app is optimized for fast, everyday financial operations with a clean and intuitive interface.",
+    "stack": [
+      "Frontend: React Native",
+      "Backend: Laravel",
+      "Database: MySQL",
+      "APIs: Payment gateways, telecom APIs"
+    ],
+    "problem": "Users face:\r\n\r\nMultiple apps for airtime, data, bills, and payments\r\nSlow or unreliable transaction processes\r\nPoor visibility of balances and transaction history\r\nLack of simple, mobile-first financial tools",
+    "solution": "This app provides:\r\n\r\nA centralized wallet for all financial activities\r\nInstant access to essential services (airtime, data, bills)\r\nReal-time transaction tracking\r\nClean UI designed for speed and ease of use\r\nIntegrated support and communication system",
+    "architecture": "Mobile-first architecture with API-driven services\r\nBackend handling transactions, wallet balance, and verification\r\nSecure payment processing layer\r\nIntegration with telecom and utility providers\r\nScalable system for high transaction volume",
+    "features": [
+      "Airtime purchase",
+      "Data subscription services",
+      "Utility payments",
+      "Betting wallet funding",
+      "Gift card services",
+      "Transaction history with status tracking"
+    ],
+    "image_url": "https://udkzxajwoxcppzthvzwz.supabase.co/storage/v1/object/public/projects/1776624610752-WhatsApp%20Image%202026-04-19%20at%207.45.21%20PM.jpeg",
+    "demo_url": null,
+    "featured": true
+  },
+  {
+    "slug": "package-delivery-tracking-mobile-app",
+    "title": "Package Delivery & Tracking Mobile App",
+    "type": "Mobile",
+    "description": "A logistics mobile application that enables users to send, receive, and track packages in real-time. The app is designed for simplicity and speed, providing users with clear delivery status, tracking updates, and seamless package management.",
+    "stack": [
+      "Frontend: React Native",
+      "Backend: Node.js / Laravel",
+      "Database:  MongoDB",
+      "APIs: Maps & geolocation services",
+      "Deployment: VPS"
+    ],
+    "problem": "Users often experience:\r\n\r\nLack of real-time visibility on package status\r\nComplicated delivery request processes\r\nPoor communication between sender and delivery service\r\nUnclear delivery timelines",
+    "solution": "This app provides:\r\n\r\nReal-time package tracking with status updates\r\nSimple interface to send or pick up packages\r\nClear delivery timeline and estimated time\r\nCentralized dashboard for all active deliveries\r\nUser-friendly design optimized for mobile",
+    "architecture": "Mobile-first architecture with API-driven backend\r\nReal-time tracking system (status updates + timestamps)\r\nBackend handles package data, routing, and tracking logic\r\nScalable infrastructure for multiple deliveries and users",
+    "features": [
+      "Track package via tracking ID",
+      "Send package request",
+      "Real-time delivery status (e.g., “In Transit”)",
+      "User location integration",
+      "Push Notification system for updates"
+    ],
+    "image_url": "https://udkzxajwoxcppzthvzwz.supabase.co/storage/v1/object/public/projects/1776627079387-Screenshot%202025-08-11%20225335.png",
+    "demo_url": null,
+    "featured": true
+  },
+  {
+    "slug": "law-firm-corporate-website",
+    "title": "Law Firm Corporate Website",
+    "type": "Web",
+    "description": "A premium law firm website designed to establish trust, showcase legal expertise, and convert visitors into clients. The platform emphasizes strong branding, clear messaging, and strategic call-to-actions to drive consultations.",
+    "stack": ["Frontend: Next.js", "Styling: Tailwind CSS"],
+    "problem": "Many law firm websites:\r\n\r\nLack strong branding and credibility signals\r\nFail to communicate expertise clearly\r\nHave poor conversion flow for consultations\r\nFeel outdated and not client-focused",
+    "solution": "This platform delivers:\r\n\r\nHigh-end, trust-driven design\r\nClear value proposition and legal positioning\r\nStrategic CTAs (Free Consultation, Practice Areas)\r\nStrong visual storytelling with attorney credibility\r\nOptimized user journey for client acquisition",
+    "architecture": "Frontend: Responsive, SEO-optimized layout\r\nPerformance: Optimized assets and fast loading\r\nIntegration: Contact forms + live chat system",
+    "features": [
+      "Fully responsive design",
+      "SEO-optimized structure",
+      "Contact and inquiry system",
+      "Live chat integration"
+    ],
+    "image_url": "https://udkzxajwoxcppzthvzwz.supabase.co/storage/v1/object/public/projects/1776626520037-Screenshot%202026-03-06%20190102.png",
+    "demo_url": "https://barristercollins-five.vercel.app/",
+    "featured": false
+  },
+  {
+    "slug": "logistics-transport-company-website",
+    "title": "Logistics & Transport Company Website",
+    "type": "Web",
+    "description": "A modern logistics and transport company website designed to showcase services, enable shipment tracking, and drive customer inquiries. The platform combines strong visual branding with functional tools like real-time tracking and contact integration.",
+    "stack": [
+      "Backend: Laravel",
+      "Frontend: HTML, CSS, JavaScript",
+      "Styling: Tailwind CSS"
+    ],
+    "problem": "ogistics companies often face:\r\n\r\nOutdated websites with poor UI/UX\r\nNo easy shipment tracking system\r\nLow customer trust due to weak branding\r\nPoor mobile responsiveness and slow performance",
+    "solution": "Modern, high-impact landing page design\r\nIntegrated “Track & Trace” functionality\r\nClear service presentation and navigation\r\nOptimized performance and mobile experience\r\nDirect communication channels (chat/contact)",
+    "architecture": "Frontend: Responsive UI with component-based layout\r\nBackend: API-driven system for tracking and contact handling\r\nIntegration: Live chat + tracking system\r\nHosting: Optimized CDN delivery for fast global access",
+    "features": [
+      "Shipment tracking (“Track & Trace”) system",
+      "Live chat integration"
+    ],
+    "image_url": "https://udkzxajwoxcppzthvzwz.supabase.co/storage/v1/object/public/projects/1776623739839-Screenshot%202026-03-01%20165537.png",
+    "demo_url": "https://pacificlogisticsservice.com/",
+    "featured": true
+  },
+  {
+    "slug": "united-airways-flight-booking-travel-platform",
+    "title": "United Airways – Flight Booking & Travel Platform",
+    "type": "Web",
+    "description": "United Airways is a modern airline booking platform that allows users to search, compare, and book flights from hundreds of airlines worldwide. The platform offers a streamlined travel experience with secure online payments, crypto payment support, live flight availability, destination discovery, and travel guides — all within a clean and responsive interface optimized for global travelers.",
+    "stack": ["PHP / Laravel", "MySQL", "Tailwind CSS"],
+    "problem": "Many flight booking platforms are cluttered, difficult to navigate, or lack flexible payment methods. Travelers often struggle to compare flight prices quickly, find affordable deals, or book securely across multiple airlines in one place.",
+    "solution": "United Airways provides a centralized travel booking experience that simplifies flight discovery and reservations. The platform aggregates flights from multiple airlines, displays real-time travel deals, and supports secure payments including cryptocurrency, making global travel booking faster and more accessible.",
+    "architecture": "Frontend: Responsive web interface optimized for desktop and mobile\r\nBackend: Flight search aggregation and booking management system\r\nPayment Gateway Integration\r\nAirline API Integration\r\nSecure Authentication & Booking System\r\nCloud Hosting Infrastructure\r\nReal-time Flight Data Handling",
+    "features": [
+      "Flight search and comparison",
+      "One-way, round-trip, and multi-city booking",
+      "Real-time flight availability",
+      "Secure online payment processing",
+      "Cryptocurrency payment support",
+      "Global airline integration",
+      "Travel guides and tips"
+    ],
+    "image_url": "https://udkzxajwoxcppzthvzwz.supabase.co/storage/v1/object/public/projects/1779560229450-united%20airways.JPG",
+    "demo_url": "https://unitedairways.net/",
+    "featured": true
+  },
+  {
+    "slug": "nexapoint-nigerian-bills-payment-vtu-platform",
+    "title": "NexaPoint – Nigerian Bills Payment & VTU Platform",
+    "type": "Web",
+    "description": "NexaPoint is a modern Nigerian VTU and digital payment platform that enables users to buy airtime, data bundles, cable TV subscriptions, electricity tokens, and fund betting accounts instantly. The platform provides a fast, secure, and user-friendly experience with wallet funding, real-time transactions, and high uptime reliability for everyday digital payments.",
+    "stack": [
+      "PHP/laravel",
+      "Tailwind CSS",
+      "Next.js",
+      "Payment Gateway APIs",
+      "REST APIs"
+    ],
+    "problem": "Many Nigerians use multiple apps and unreliable platforms for airtime purchases, bill payments, betting wallet funding, and utility subscriptions. This creates inconvenience, delays, failed transactions, and inconsistent user experiences.",
+    "solution": "NexaPoint centralizes essential digital payment services into a single easy-to-use platform. Users can instantly pay bills, top up airtime and data, fund betting accounts, and manage wallet transactions securely from one dashboard.",
+    "architecture": "Modern Responsive Frontend\r\nWallet Management System\r\nReal-Time Transaction Processing\r\nSecure Payment Integration\r\nAPI-Based VTU Services\r\nMobile-First UI/UX Design\r\nCloud-Based Hosting Infrastructure\r\nScalable Service Architecture",
+    "features": [
+      "Secure wallet system",
+      "Airtime top-up",
+      "data bundle purchases",
+      "Cable TV subscription payments",
+      "Electricity bill payments",
+      "Betting wallet funding"
+    ],
+    "image_url": "https://udkzxajwoxcppzthvzwz.supabase.co/storage/v1/object/public/projects/1779565364924-nexa.JPG",
+    "demo_url": "https://nexapoint-vgsj.vercel.app/",
+    "featured": true
+  }
+]

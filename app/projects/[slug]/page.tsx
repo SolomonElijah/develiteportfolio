@@ -1,199 +1,246 @@
 import Image from 'next/image'
 import Link from 'next/link'
 import { notFound } from 'next/navigation'
-import type { Metadata } from 'next'
 import { getProjectBySlug } from '@/lib/data'
-import {
-  ArrowLeftIcon,
-  ArrowTopRightOnSquareIcon,
-  CheckCircleIcon,
-  CpuChipIcon,
-  ServerIcon,
-  CloudIcon,
-} from '@heroicons/react/24/outline'
-
+import { siteUrl } from '@/lib/profile'
+import { pageMetadata, serializeJsonLd } from '@/lib/seo'
+import Arrow from '@/components/Arrow'
+import ContactBanner from '@/components/ContactBanner'
+import { parseArchitecture } from '@/lib/utils'
+export const revalidate = 300
 interface Props {
-  params: { slug: string }
+  params: Promise<{ slug: string }>
 }
-
-export async function generateMetadata({ params }: Props): Promise<Metadata> {
-  const project = await getProjectBySlug(params.slug)
-  if (!project) return { title: 'Project Not Found' }
-  return {
-    title: `${project.title} | Projects`,
-    description: project.description,
-  }
+export async function generateMetadata({ params }: Props) {
+  const { slug } = await params,
+    project = await getProjectBySlug(slug)
+  return project
+    ? pageMetadata(
+        project.title,
+        project.description,
+        `/projects/${project.slug}`,
+      )
+    : { title: 'Project not found', robots: { index: false } }
 }
-
 export default async function ProjectDetailPage({ params }: Props) {
-  const project = await getProjectBySlug(params.slug)
-
-  if (!project) {
-    notFound()
-  }
-
+  const { slug } = await params,
+    project = await getProjectBySlug(slug)
+  if (!project) notFound()
+  const path = `/projects/${project.slug}`
   return (
-    <article className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 lg:py-12">
-      {/* Back Navigation */}
-      <Link
-        href="/projects"
-        className="inline-flex items-center gap-2 text-sm text-slate-600 dark:text-gray-400 hover:text-blue-600 dark:hover:text-blue-400 mb-8 transition-colors"
-      >
-        <ArrowLeftIcon className="w-4 h-4" />
-        Back to Projects
-      </Link>
-
-      {/* Hero Section */}
-      <div className="mb-10">
-        <div className="flex flex-wrap items-center gap-3 mb-4">
-          <span className="inline-block px-3 py-1 bg-blue-100 dark:bg-blue-900/30 text-blue-700 dark:text-blue-400 rounded-full text-sm font-medium border border-blue-200 dark:border-blue-800">
-            {project.type}
-          </span>
-          {project.featured && (
-            <span className="inline-block px-3 py-1 bg-amber-100 dark:bg-amber-900/30 text-amber-700 dark:text-amber-400 rounded-full text-sm font-medium border border-amber-200 dark:border-amber-800">
-              Featured
-            </span>
-          )}
-        </div>
-        <h1 className="text-3xl md:text-4xl lg:text-5xl font-bold text-slate-900 dark:text-white mb-4">
-          {project.title}
-        </h1>
-        <p className="text-xl text-slate-600 dark:text-gray-400 max-w-4xl">
-          {project.description}
-        </p>
-      </div>
-
-      {/* Main Content Grid */}
-      <div className="grid lg:grid-cols-3 gap-10 lg:gap-12">
-        {/* Left Column - Main Content */}
-        <div className="lg:col-span-2 space-y-10">
-          {/* Image */}
-          <div className="relative aspect-video rounded-2xl overflow-hidden shadow-xl border border-gray-200 dark:border-gray-800">
+    <>
+      <div className="container">
+        <nav className="breadcrumb" aria-label="Breadcrumb">
+          <Link href="/">Home</Link>
+          <span aria-hidden="true">/</span>
+          <Link href="/projects">Work</Link>
+          <span aria-hidden="true">/</span>
+          <span aria-current="page">{project.title}</span>
+        </nav>
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{
+            __html: serializeJsonLd({
+              '@context': 'https://schema.org',
+              '@graph': [
+                {
+                  '@type': 'CreativeWork',
+                  name: project.title,
+                  description: project.description,
+                  url: `${siteUrl}${path}`,
+                  image: new URL(project.image, siteUrl).href,
+                  creator: {
+                    '@id': `${siteUrl}/#person`,
+                    '@type': 'Person',
+                    name: 'Solomon Elijah',
+                  },
+                  keywords: project.stack.join(', '),
+                },
+                {
+                  '@type': 'BreadcrumbList',
+                  itemListElement: [
+                    {
+                      '@type': 'ListItem',
+                      position: 1,
+                      name: 'Home',
+                      item: siteUrl,
+                    },
+                    {
+                      '@type': 'ListItem',
+                      position: 2,
+                      name: 'Projects',
+                      item: `${siteUrl}/projects`,
+                    },
+                    {
+                      '@type': 'ListItem',
+                      position: 3,
+                      name: project.title,
+                      item: `${siteUrl}${path}`,
+                    },
+                  ],
+                },
+              ],
+            }),
+          }}
+        />
+        <article>
+          <header className="detail-header">
+            <p className="eyebrow accent">
+              {project.type.toUpperCase()} DEVELOPMENT / CASE STUDY
+            </p>
+            <h1>{project.title}</h1>
+            <p>{project.description}</p>
+          </header>
+          <div className="detail-image">
             <Image
               src={project.image}
-              alt={project.title}
+              alt={`${project.title} application interface`}
               fill
-              className="object-cover"
-              sizes="(max-width: 1024px) 100vw, 66vw"
               priority
+              sizes="(max-width: 760px) 90vw, 85vw"
             />
           </div>
+          <div className="detail-layout">
+            <div>
+              {[
+                {
+                  title: 'The problem',
+                  text: project.problem,
+                  isArchitecture: false,
+                },
+                {
+                  title: 'The approach',
+                  text: project.solution,
+                  isArchitecture: false,
+                },
+                {
+                  title: 'Architecture & implementation',
+                  text: project.architecture,
+                  isArchitecture: true,
+                },
+              ]
+                .filter((section) => section.text)
+                .map((section) => {
+                  const archItems = section.isArchitecture
+                    ? parseArchitecture(section.text)
+                    : []
+                  const hasStructuredArch =
+                    section.isArchitecture &&
+                    archItems.length > 0 &&
+                    archItems.some((i) => i.layer)
 
-          {/* Problem */}
-          <section>
-            <h2 className="text-2xl font-bold text-slate-900 dark:text-white mb-3 flex items-center gap-2">
-              <span className="w-1.5 h-6 bg-red-500 dark:bg-red-400 rounded-full"></span>
-              The Problem
-            </h2>
-            <p className="text-slate-600 dark:text-gray-400 leading-relaxed">
-              {project.problem}
-            </p>
-          </section>
-
-          {/* Solution */}
-          <section>
-            <h2 className="text-2xl font-bold text-slate-900 dark:text-white mb-3 flex items-center gap-2">
-              <span className="w-1.5 h-6 bg-green-500 dark:bg-green-400 rounded-full"></span>
-              The Solution
-            </h2>
-            <p className="text-slate-600 dark:text-gray-400 leading-relaxed">
-              {project.solution}
-            </p>
-          </section>
-
-          {/* Architecture */}
-          <section>
-            <h2 className="text-2xl font-bold text-slate-900 dark:text-white mb-3 flex items-center gap-2">
-              <span className="w-1.5 h-6 bg-purple-500 dark:bg-purple-400 rounded-full"></span>
-              Architecture
-            </h2>
-            <p className="text-slate-600 dark:text-gray-400 leading-relaxed">
-              {project.architecture}
-            </p>
-          </section>
-
-          {/* Features */}
-          <section>
-            <h2 className="text-2xl font-bold text-slate-900 dark:text-white mb-4">
-              Key Features
-            </h2>
-            <ul className="grid sm:grid-cols-2 gap-3">
-              {project.features.map((feature, i) => (
-                <li key={i} className="flex items-start gap-3">
-                  <CheckCircleIcon className="w-5 h-5 text-green-500 dark:text-green-400 shrink-0 mt-0.5" />
-                  <span className="text-slate-600 dark:text-gray-400">{feature}</span>
-                </li>
-              ))}
-            </ul>
-          </section>
-        </div>
-
-        {/* Right Column - Sidebar */}
-        <div className="lg:col-span-1">
-          <div className="sticky top-24 space-y-6">
-            {/* Tech Stack Card */}
-            <div className="bg-gray-50 dark:bg-navy-card rounded-2xl p-6 border border-gray-200 dark:border-gray-800">
-              <h3 className="text-lg font-semibold text-slate-900 dark:text-white mb-4 flex items-center gap-2">
-                <CpuChipIcon className="w-5 h-5 text-blue-600 dark:text-blue-400" />
-                Tech Stack
-              </h3>
-              <div className="flex flex-wrap gap-2">
+                  return (
+                    <section className="detail-section" key={section.title}>
+                      <h2>{section.title}</h2>
+                      {hasStructuredArch ? (
+                        <div
+                          style={{
+                            display: 'flex',
+                            flexDirection: 'column',
+                            gap: 10,
+                            marginTop: 14,
+                          }}
+                        >
+                          {archItems.map((item, idx) => (
+                            <div
+                              key={idx}
+                              style={{
+                                display: 'flex',
+                                flexWrap: 'wrap',
+                                alignItems: 'baseline',
+                                gap: '8px 14px',
+                                padding: '12px 16px',
+                                borderRadius: '10px',
+                                background: 'var(--soft)',
+                                border: '1px solid var(--line)',
+                              }}
+                            >
+                              {item.layer && (
+                                <span
+                                  style={{
+                                    fontSize: 12,
+                                    fontWeight: 700,
+                                    fontFamily: 'monospace',
+                                    color: 'var(--accent)',
+                                    letterSpacing: '0.03em',
+                                    minWidth: 100,
+                                  }}
+                                >
+                                  {item.layer}:
+                                </span>
+                              )}
+                              <span
+                                style={{
+                                  fontSize: 14,
+                                  color: 'var(--muted)',
+                                  flex: 1,
+                                  minWidth: 200,
+                                  lineHeight: 1.6,
+                                }}
+                              >
+                                {item.detail}
+                              </span>
+                            </div>
+                          ))}
+                        </div>
+                      ) : (
+                        <p style={{ whiteSpace: 'pre-line' }}>{section.text}</p>
+                      )}
+                    </section>
+                  )
+                })}
+              {project.features.length > 0 && (
+                <section className="detail-section">
+                  <h2>Key features</h2>
+                  <ul>
+                    {project.features.map((feature) => (
+                      <li key={feature}>{feature}</li>
+                    ))}
+                  </ul>
+                </section>
+              )}
+              {project.outcome && (
+                <section className="detail-section">
+                  <h2>Outcome</h2>
+                  <p>{project.outcome}</p>
+                </section>
+              )}
+            </div>
+            <aside className="detail-sidebar">
+              <h2>Project at a glance</h2>
+              <p>{project.type} application</p>
+              <div className="tags">
                 {project.stack.map((tech) => (
-                  <span
-                    key={tech}
-                    className="px-3 py-1.5 bg-white dark:bg-gray-800 text-slate-700 dark:text-gray-300 rounded-full text-sm font-medium border border-gray-200 dark:border-gray-700 shadow-sm"
-                  >
-                    {tech}
-                  </span>
+                  <span key={tech}>{tech}</span>
                 ))}
               </div>
-            </div>
-
-            {/* Outcome Card */}
-            <div className="bg-gradient-to-br from-blue-50 to-indigo-50 dark:from-blue-900/20 dark:to-indigo-900/20 rounded-2xl p-6 border border-blue-200 dark:border-blue-800">
-              <h3 className="text-lg font-semibold text-slate-900 dark:text-white mb-3 flex items-center gap-2">
-                <ServerIcon className="w-5 h-5 text-blue-600 dark:text-blue-400" />
-                Outcome
-              </h3>
-              <p className="text-slate-700 dark:text-gray-300 leading-relaxed">
-                {project.outcome}
-              </p>
-            </div>
-
-            {/* Demo Link */}
-            {project.demo_url && (
-              <div className="bg-white dark:bg-navy-card rounded-2xl p-6 border border-gray-200 dark:border-gray-800">
+              {project.demo_url ? (
                 <a
                   href={project.demo_url}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="group flex items-center justify-center gap-2 w-full bg-emerald-600 hover:bg-emerald-700 text-white px-6 py-3 rounded-xl font-medium transition-all duration-200 shadow-lg shadow-emerald-600/20 hover:shadow-emerald-600/30"
+                  className="button"
                 >
-                  <CloudIcon className="w-5 h-5" />
-                  View Live Demo
-                  <ArrowTopRightOnSquareIcon className="w-4 h-4 group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-transform" />
+                  Visit project <Arrow diagonal />
                 </a>
-                <p className="text-xs text-center text-slate-500 dark:text-gray-500 mt-3">
-                  Opens in a new tab
+              ) : (
+                <p>
+                  A public demo is not linked for this project. Get in touch to
+                  discuss its implementation.
                 </p>
-              </div>
-            )}
-
-            {/* Quick Contact */}
-            <div className="bg-gray-50 dark:bg-navy-card rounded-2xl p-6 border border-gray-200 dark:border-gray-800 text-center">
-              <p className="text-sm text-slate-600 dark:text-gray-400 mb-3">
-                Interested in a similar project?
-              </p>
-              <Link
-                href="/contact"
-                className="inline-flex items-center justify-center gap-2 w-full border border-blue-600 dark:border-blue-500 text-blue-600 dark:text-blue-400 hover:bg-blue-50 dark:hover:bg-blue-900/20 px-4 py-2 rounded-lg text-sm font-medium transition-colors"
-              >
-                Let's talk
+              )}
+              <Link href="/contact" className="button button-outline">
+                Discuss this project <Arrow />
               </Link>
-            </div>
+              <p>
+                Interested in the technical decisions? I’m happy to talk through
+                the implementation.
+              </p>
+            </aside>
           </div>
-        </div>
+        </article>
       </div>
-    </article>
+      <ContactBanner />
+    </>
   )
 }

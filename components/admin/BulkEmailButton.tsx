@@ -1,7 +1,7 @@
 'use client'
 
 import { useState } from 'react'
-import { MegaphoneIcon } from '@heroicons/react/24/outline'
+import { MegaphoneIcon, ArrowPathIcon } from '@heroicons/react/24/outline'
 import { toast } from 'sonner'
 
 interface BulkEmailButtonProps {
@@ -12,7 +12,9 @@ export default function BulkEmailButton({ contacts }: BulkEmailButtonProps) {
   const [showModal, setShowModal] = useState(false)
   const [sending, setSending] = useState(false)
 
-  const uniqueEmails = Array.from(new Set(contacts.map(c => c.email).filter(Boolean)))
+  const uniqueEmails = Array.from(
+    new Set(contacts.map((c) => c.email).filter(Boolean)),
+  )
 
   const handleSend = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault()
@@ -38,7 +40,7 @@ export default function BulkEmailButton({ contacts }: BulkEmailButtonProps) {
         throw new Error(data.error || 'Failed to send')
       }
 
-      toast.success(`Email sent to ${uniqueEmails.length} contacts`)
+      toast.success(`Broadcast sent to ${uniqueEmails.length} contacts`)
       setShowModal(false)
     } catch (error: any) {
       toast.error(error.message || 'Failed to send emails')
@@ -52,28 +54,30 @@ export default function BulkEmailButton({ contacts }: BulkEmailButtonProps) {
       <button
         onClick={() => setShowModal(true)}
         disabled={uniqueEmails.length === 0}
-        className="flex items-center gap-2 bg-purple-600 hover:bg-purple-700 text-white px-4 py-2 rounded-lg text-sm font-medium transition-colors disabled:opacity-50"
+        className="flex items-center gap-1.5 px-3 py-2 rounded-xl text-xs font-semibold bg-purple-600/20 hover:bg-purple-600/30 text-purple-300 border border-purple-500/30 transition-all disabled:opacity-40"
       >
-        <MegaphoneIcon className="w-5 h-5" />
-        Email All ({uniqueEmails.length})
+        <MegaphoneIcon className="w-4 h-4" />
+        <span>Broadcast ({uniqueEmails.length})</span>
       </button>
 
       {showModal && (
-        <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50">
-          <div className="bg-white dark:bg-navy-card rounded-xl p-6 w-full max-w-lg border border-gray-200 dark:border-gray-800">
-            <h3 className="text-lg font-semibold text-slate-900 dark:text-white mb-2">
-              Email All Contacts
-            </h3>
-            <p className="text-sm text-gray-500 dark:text-gray-400 mb-4">
-              This will send to {uniqueEmails.length} unique email addresses
-            </p>
+        <div className="fixed inset-0 bg-slate-950/80 backdrop-blur-sm flex items-center justify-center z-50 p-4">
+          <div className="bg-slate-900 border border-slate-800 rounded-2xl p-6 w-full max-w-lg shadow-2xl space-y-4">
+            <div>
+              <h3 className="text-lg font-semibold text-white">
+                Broadcast to All Contacts
+              </h3>
+              <p className="text-xs text-slate-400 mt-0.5">
+                Send to {uniqueEmails.length} verified recipient addresses.
+              </p>
+            </div>
 
-            <div className="mb-4 max-h-32 overflow-y-auto bg-gray-50 dark:bg-gray-800/50 rounded-lg p-3">
-              <div className="flex flex-wrap gap-1">
+            <div className="max-h-24 overflow-y-auto bg-slate-950 border border-slate-800 rounded-xl p-2.5">
+              <div className="flex flex-wrap gap-1.5">
                 {uniqueEmails.map((email) => (
                   <span
                     key={email}
-                    className="inline-flex px-2 py-0.5 bg-blue-100 dark:bg-blue-900/30 text-blue-700 dark:text-blue-300 rounded text-xs"
+                    className="inline-flex px-2 py-0.5 bg-blue-500/15 text-blue-300 border border-blue-500/20 rounded-md text-[11px] font-mono"
                   >
                     {email}
                   </span>
@@ -82,42 +86,47 @@ export default function BulkEmailButton({ contacts }: BulkEmailButtonProps) {
             </div>
 
             <form onSubmit={handleSend} className="space-y-4">
-              <div>
-                <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+              <div className="space-y-1">
+                <label className="block text-xs font-medium text-slate-300">
                   Subject *
                 </label>
                 <input
                   type="text"
                   name="subject"
                   required
-                  className="w-full px-4 py-2 rounded-lg border border-gray-300 dark:border-gray-700 bg-white dark:bg-gray-800 text-slate-900 dark:text-white focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                  placeholder="Portfolio Announcement / News"
+                  className="w-full px-3.5 py-2 rounded-xl border border-slate-700 bg-slate-950 text-white placeholder-slate-500 focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500 text-sm"
                 />
               </div>
-              <div>
-                <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+
+              <div className="space-y-1">
+                <label className="block text-xs font-medium text-slate-300">
                   Message *
                 </label>
                 <textarea
                   name="message"
                   required
-                  rows={6}
-                  className="w-full px-4 py-2 rounded-lg border border-gray-300 dark:border-gray-700 bg-white dark:bg-gray-800 text-slate-900 dark:text-white focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                  rows={5}
+                  placeholder="Type broadcast message..."
+                  className="w-full px-3.5 py-2.5 rounded-xl border border-slate-700 bg-slate-950 text-white placeholder-slate-500 focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500 text-sm leading-relaxed"
                 />
               </div>
-              <div className="flex justify-end gap-3">
+
+              <div className="flex justify-end gap-3 pt-2">
                 <button
                   type="button"
                   onClick={() => setShowModal(false)}
-                  className="px-4 py-2 text-gray-600 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-800 rounded-lg transition-colors"
+                  className="px-4 py-2 text-xs font-medium text-slate-400 hover:text-white bg-slate-900 hover:bg-slate-800 border border-slate-800 rounded-xl transition-colors"
                 >
                   Cancel
                 </button>
                 <button
                   type="submit"
                   disabled={sending}
-                  className="px-4 py-2 bg-purple-600 hover:bg-purple-700 text-white rounded-lg font-medium transition-colors disabled:opacity-50"
+                  className="px-5 py-2 bg-purple-600 hover:bg-purple-500 text-white text-xs font-semibold rounded-xl transition-all shadow-md shadow-purple-500/20 disabled:opacity-50 flex items-center gap-1.5"
                 >
-                  {sending ? 'Sending...' : `Send to ${uniqueEmails.length} contacts`}
+                  {sending && <ArrowPathIcon className="w-3.5 h-3.5 animate-spin" />}
+                  <span>{sending ? 'Sending...' : 'Send Broadcast'}</span>
                 </button>
               </div>
             </form>

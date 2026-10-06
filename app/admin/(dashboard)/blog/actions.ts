@@ -1,112 +1,53 @@
 'use server'
-
-import { revalidatePath } from 'next/cache'
+import { revalidatePath, revalidateTag } from 'next/cache'
 import { createAdminClient } from '@/lib/supabase/server'
-import { generateSlug } from '@/lib/utils'
-
-export async function createBlogPost(formData: FormData) {
-  const supabase = createAdminClient()
-
-  const title = formData.get('title') as string
-  const content = formData.get('content') as string
-  const excerpt = formData.get('excerpt') as string
-  const thumbnailUrl = formData.get('thumbnailUrl') as string
-  const published = formData.get('published') === 'true'
-
-  const slug = generateSlug(title)
-
-  const { error } = await supabase.from('blog_posts').insert({
-    title,
-    slug,
-    content,
-    excerpt,
-    thumbnail_url: thumbnailUrl,
-    published,
-  })
-
-  if (error) {
-    throw new Error(error.message)
-  }
-
+import { blogInput, recordId } from '@/lib/admin-validation'
+function refresh() {
+  try {
+    revalidateTag('blog_posts', 'max')
+  } catch {}
   revalidatePath('/admin/blog')
-  revalidatePath('/blog')
-  revalidatePath('/')
+  revalidatePath('/blog', 'layout')
+  revalidatePath('/sitemap.xml')
+  revalidatePath('/llms.txt')
 }
-
-export async function updateBlogPost(id: string, formData: FormData) {
-  const supabase = createAdminClient()
-
-  const title = formData.get('title') as string
-  const content = formData.get('content') as string
-  const excerpt = formData.get('excerpt') as string
-  const thumbnailUrl = formData.get('thumbnailUrl') as string
-  const published = formData.get('published') === 'true'
-
-  const slug = generateSlug(title)
-
-  const { error } = await supabase
+export async function createBlogPost(form: FormData) {
+  const db = await createAdminClient()
+  const { error } = await db.from('blog_posts').insert(blogInput(form))
+  if (error)
+    throw new Error(
+      'Could not create the article. Check that its title is unique.',
+    )
+  refresh()
+}
+export async function updateBlogPost(id: string, form: FormData) {
+  const db = await createAdminClient()
+  recordId(id)
+  const { slug: _slug, ...input } = blogInput(form)
+  const { error } = await db
     .from('blog_posts')
-    .update({
-      title,
-      slug,
-      content,
-      excerpt,
-      thumbnail_url: thumbnailUrl,
-      published,
-      updated_at: new Date().toISOString(),
-    })
+    .update({ ...input, updated_at: new Date().toISOString() })
     .eq('id', id)
-
-  if (error) {
-    throw new Error(error.message)
-  }
-
-  revalidatePath('/admin/blog')
+  if (error) throw new Error('Could not update the article.')
+  refresh()
   revalidatePath(`/admin/blog/edit/${id}`)
-  revalidatePath('/blog')
-  revalidatePath('/')
 }
-
 export async function deleteBlogPost(id: string) {
-  const supabase = createAdminClient()
-
-  const { data: post } = await supabase
-    .from('blog_posts')
-    .select('thumbnail_url')
-    .eq('id', id)
-    .single()
-
-  if (post?.thumbnail_url) {
-    const fileName = post.thumbnail_url.split('/').pop()
-    if (fileName) {
-      await supabase.storage.from('blog').remove([fileName])
-    }
-  }
-
-  const { error } = await supabase.from('blog_posts').delete().eq('id', id)
-
-  if (error) {
-    throw new Error(error.message)
-  }
-
-  revalidatePath('/admin/blog')
-  revalidatePath('/blog')
-  revalidatePath('/')
+  const db = await createAdminClient()
+  recordId(id)
+  const { error } = await db.from('blog_posts').delete().eq('id', id)
+  if (error) throw new Error('Could not delete the article.')
+  refresh()
 }
-
 export async function togglePublished(id: string, published: boolean) {
-  const supabase = createAdminClient()
-
-  const { error } = await supabase
+  const db = await createAdminClient()
+  recordId(id)
+  if (typeof published !== 'boolean')
+    throw new Error('Invalid publication state.')
+  const { error } = await db
     .from('blog_posts')
     .update({ published: !published })
     .eq('id', id)
-
-  if (error) {
-    throw new Error(error.message)
-  }
-
-  revalidatePath('/admin/blog')
-  revalidatePath('/blog')
-  revalidatePath('/')
+  if (error) throw new Error('Could not update publication state.')
+  refresh()
 }

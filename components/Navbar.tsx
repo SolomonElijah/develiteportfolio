@@ -1,98 +1,100 @@
 'use client'
-
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
+import { useEffect, useRef, useState } from 'react'
 import ThemeToggle from './ThemeToggle'
-import { useState } from 'react'
-import { Bars3Icon, XMarkIcon } from '@heroicons/react/24/outline'
-
-const navLinks = [
-  { name: 'Home', href: '/' },
-  { name: 'Projects', href: '/projects' },
-  { name: 'Blog', href: '/blog' },
+import Arrow from './Arrow'
+const links = [
+  { name: 'Work', href: '/projects' },
   { name: 'About', href: '/about' },
-  { name: 'Contact', href: '/contact' },
+  { name: 'Writing', href: '/blog' },
 ]
-
 export default function Navbar() {
-  const pathname = usePathname()
-  const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
-
+  const pathname = usePathname(),
+    [open, setOpen] = useState(false),
+    toggle = useRef<HTMLButtonElement>(null)
+  useEffect(() => setOpen(false), [pathname])
   return (
-    <nav className="fixed top-0 w-full z-50 bg-white/80 dark:bg-navy/80 backdrop-blur-md border-b border-gray-200 dark:border-gray-800">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="flex justify-between items-center h-16">
-          <Link href="/" className="text-xl font-bold text-blue-600 dark:text-blue-500">
-            Dev.Elite
+    <div className="site-header-wrapper">
+      <header
+        className={`site-header ${open ? 'menu-open' : ''}`}
+        onKeyDown={(event) => {
+          if (event.key === 'Escape') {
+            setOpen(false)
+            toggle.current?.focus()
+          }
+        }}
+      >
+        <div className="nav-inner">
+          <Link href="/" className="wordmark" aria-label="Solomon Elijah, home">
+            <span className="brand-mark">
+              se<span>.</span>
+            </span>
+            <span className="wordmark-text">Solomon Elijah</span>
           </Link>
-
-          {/* Desktop menu */}
-          <div className="hidden md:flex items-center space-x-8">
-            {navLinks.map((link) => (
-              <Link
-                key={link.href}
-                href={link.href}
-                className={`text-sm font-medium transition-colors hover:text-blue-600 dark:hover:text-blue-400 ${
-                  pathname === link.href
-                    ? 'text-blue-600 dark:text-blue-400'
-                    : 'text-slate-700 dark:text-gray-300'
-                }`}
-              >
-                {link.name}
-              </Link>
-            ))}
+        <nav className="desktop-nav" aria-label="Main navigation">
+          {links.map((link) => (
             <Link
-              href="/contact"
-              className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg text-sm font-medium transition-colors"
+              key={link.href}
+              href={link.href}
+              aria-current={pathname.startsWith(link.href) ? 'page' : undefined}
             >
-              Hire Me
+              {link.name}
             </Link>
-            <ThemeToggle />
-          </div>
-
-          {/* Mobile menu button */}
-          <div className="flex md:hidden items-center space-x-2">
-            <ThemeToggle />
-            <button
-              onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-              className="p-2 rounded-lg bg-gray-100 dark:bg-navy-card"
-            >
-              {mobileMenuOpen ? (
-                <XMarkIcon className="w-6 h-6" />
-              ) : (
-                <Bars3Icon className="w-6 h-6" />
-              )}
-            </button>
-          </div>
+          ))}
+        </nav>
+        <div className="nav-actions">
+          <ThemeToggle />
+          <Link href="/contact" className="button button-small nav-contact">
+            Let’s talk <Arrow diagonal />
+          </Link>
+          <button
+            ref={toggle}
+            className="icon-button menu-toggle"
+            aria-label={open ? 'Close navigation' : 'Open navigation'}
+            aria-expanded={open}
+            aria-controls="mobile-navigation"
+            onClick={() => setOpen(!open)}
+          >
+            {open ? (
+              '✕'
+            ) : (
+              <svg
+                width="22"
+                height="22"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth="1.6"
+                aria-hidden="true"
+              >
+                <path d="M4 7h16M4 12h16M4 17h16" />
+              </svg>
+            )}
+          </button>
         </div>
-
-        {/* Mobile menu */}
-        {mobileMenuOpen && (
-          <div className="md:hidden py-4 border-t border-gray-200 dark:border-gray-800">
-            {navLinks.map((link) => (
-              <Link
-                key={link.href}
-                href={link.href}
-                onClick={() => setMobileMenuOpen(false)}
-                className={`block py-2 text-base font-medium ${
-                  pathname === link.href
-                    ? 'text-blue-600 dark:text-blue-400'
-                    : 'text-slate-700 dark:text-gray-300'
-                }`}
-              >
-                {link.name}
-              </Link>
-            ))}
-            <Link
-              href="/contact"
-              onClick={() => setMobileMenuOpen(false)}
-              className="mt-2 inline-block bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg text-sm font-medium"
-            >
-              Hire Me
-            </Link>
-          </div>
-        )}
       </div>
-    </nav>
+      <nav
+        id="mobile-navigation"
+        className="mobile-nav"
+        hidden={!open}
+        aria-label="Mobile navigation"
+      >
+        {links.map((link) => (
+          <Link
+            key={link.href}
+            href={link.href}
+            onClick={() => setOpen(false)}
+            aria-current={pathname.startsWith(link.href) ? 'page' : undefined}
+          >
+            {link.name}
+          </Link>
+        ))}
+        <Link href="/contact" onClick={() => setOpen(false)}>
+          Contact <Arrow diagonal />
+        </Link>
+      </nav>
+    </header>
+  </div>
   )
 }

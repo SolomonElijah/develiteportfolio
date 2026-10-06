@@ -1,47 +1,41 @@
 import { createServerClient } from '@supabase/ssr'
 import { NextResponse, type NextRequest } from 'next/server'
-
+import { isAdmin } from './authorization'
 export async function updateSession(request: NextRequest) {
-  let supabaseResponse = NextResponse.next({ request })
-
-  const supabase = createServerClient(
-    process.env.NEXT_PUBLIC_SUPABASE_URL!,
-    process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
-    {
-      cookies: {
-  getAll() {
-    return request.cookies.getAll()
-  },
-  setAll(cookiesToSet: { name: string; value: string; options?: object }[]) {
-    cookiesToSet.forEach(({ name, value }) =>
-      request.cookies.set(name, value)
+  let response = NextResponse.next({ request })
+  const url = process.env.NEXT_PUBLIC_SUPABASE_URL,
+    key = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY
+  const login = request.nextUrl.pathname === '/admin/login'
+  if (!url || !key)
+    return login
+      ? response
+      : NextResponse.redirect(new URL('/admin/login', request.url))
+  const client = createServerClient(url, key, {
+    cookies: {
+      getAll: () => request.cookies.getAll(),
+      setAll(cookiesToSet) {
+        cookiesToSet.forEach(({ name, value }) =>
+          request.cookies.set(name, value),
+        )
+        response = NextResponse.next({ request })
+        cookiesToSet.forEach(({ name, value, options }) =>
+          response.cookies.set(name, value, options),
+        )
+      },
+    },
+  })
+  const {
+    data: { user },
+    error,
+  } = await client.auth.getUser()
+  if ((!isAdmin(error ? null : user) && !login) || (isAdmin(user) && login)) {
+    const redirect = NextResponse.redirect(
+      new URL(login ? '/admin/dashboard' : '/admin/login', request.url),
     )
-    supabaseResponse = NextResponse.next({ request })
-    cookiesToSet.forEach(({ name, value, options }) =>
-      supabaseResponse.cookies.set(name, value, options)
-    )
-  },
-},
-    }
-  )
-
-  // IMPORTANT: Do not remove this getUser call.
-  // It refreshes the auth token and ensures cookies stay valid.
-  const { data: { user } } = await supabase.auth.getUser()
-
-  const isLoginPage = request.nextUrl.pathname === '/admin/login'
-
-  if (!user && !isLoginPage) {
-    const url = request.nextUrl.clone()
-    url.pathname = '/admin/login'
-    return NextResponse.redirect(url)
+    response.cookies.getAll().forEach((cookie) => redirect.cookies.set(cookie))
+    redirect.headers.set('Cache-Control', 'private, no-store')
+    return redirect
   }
-
-  if (user && isLoginPage) {
-    const url = request.nextUrl.clone()
-    url.pathname = '/admin/dashboard'
-    return NextResponse.redirect(url)
-  }
-
-  return supabaseResponse
+  response.headers.set('Cache-Control', 'private, no-store')
+  return response
 }

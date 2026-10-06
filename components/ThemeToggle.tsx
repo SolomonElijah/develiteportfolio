@@ -1,28 +1,36 @@
 'use client'
-
 import { useTheme } from 'next-themes'
 import { useEffect, useState } from 'react'
-import { SunIcon, MoonIcon } from '@heroicons/react/24/outline'
-
 export default function ThemeToggle() {
-  const [mounted, setMounted] = useState(false)
-  const { theme, setTheme } = useTheme()
-
+  const [mounted, setMounted] = useState(false),
+    { resolvedTheme, setTheme } = useTheme()
   useEffect(() => setMounted(true), [])
-
-  if (!mounted) return null
-
+  const dark = mounted && resolvedTheme === 'dark'
   return (
     <button
-      onClick={() => setTheme(theme === 'dark' ? 'light' : 'dark')}
-      className="p-2 rounded-lg bg-gray-100 dark:bg-navy-card hover:bg-gray-200 dark:hover:bg-gray-800 transition-colors"
-      aria-label="Toggle theme"
+      className="icon-button"
+      aria-label={`Switch to ${dark ? 'light' : 'dark'} theme`}
+      onClick={() => setTheme(dark ? 'light' : 'dark')}
+      disabled={!mounted}
     >
-      {theme === 'dark' ? (
-        <SunIcon className="w-5 h-5 text-yellow-500" />
-      ) : (
-        <MoonIcon className="w-5 h-5 text-slate-700" />
-      )}
+      <svg
+        width="19"
+        height="19"
+        viewBox="0 0 24 24"
+        fill="none"
+        stroke="currentColor"
+        strokeWidth="1.6"
+        aria-hidden="true"
+      >
+        {dark ? (
+          <>
+            <circle cx="12" cy="12" r="4" />
+            <path d="M12 2v2m0 16v2M2 12h2m16 0h2M5 5l1.5 1.5m11 11L19 19M5 19l1.5-1.5m11-11L19 5" />
+          </>
+        ) : (
+          <path d="M20.5 14A8.5 8.5 0 0 1 10 3.5 8.5 8.5 0 1 0 20.5 14Z" />
+        )}
+      </svg>
     </button>
   )
 }

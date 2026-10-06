@@ -1,7 +1,7 @@
 'use client'
 
 import { useState } from 'react'
-import { PaperAirplaneIcon } from '@heroicons/react/24/outline'
+import { PaperAirplaneIcon, ArrowPathIcon } from '@heroicons/react/24/outline'
 import { toast } from 'sonner'
 
 export default function SendEmailButton() {
@@ -42,67 +42,79 @@ export default function SendEmailButton() {
     <>
       <button
         onClick={() => setShowModal(true)}
-        className="flex items-center gap-2 bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded-lg text-sm font-medium transition-colors"
+        className="flex items-center gap-1.5 px-3 py-2 rounded-xl text-xs font-semibold bg-emerald-600/20 hover:bg-emerald-600/30 text-emerald-300 border border-emerald-500/30 transition-all"
       >
-        <PaperAirplaneIcon className="w-5 h-5" />
-        Send Email
+        <PaperAirplaneIcon className="w-4 h-4" />
+        <span>Direct Email</span>
       </button>
 
       {showModal && (
-        <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50">
-          <div className="bg-white dark:bg-navy-card rounded-xl p-6 w-full max-w-lg border border-gray-200 dark:border-gray-800">
-            <h3 className="text-lg font-semibold text-slate-900 dark:text-white mb-4">
-              Send Email
-            </h3>
+        <div className="fixed inset-0 bg-slate-950/80 backdrop-blur-sm flex items-center justify-center z-50 p-4">
+          <div className="bg-slate-900 border border-slate-800 rounded-2xl p-6 w-full max-w-lg shadow-2xl space-y-4">
+            <div>
+              <h3 className="text-lg font-semibold text-white">
+                Send Direct Email
+              </h3>
+              <p className="text-xs text-slate-400 mt-0.5">
+                Send a custom email via configured SMTP / Resend service.
+              </p>
+            </div>
+
             <form onSubmit={handleSend} className="space-y-4">
-              <div>
-                <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
-                  To (email address) *
+              <div className="space-y-1">
+                <label className="block text-xs font-medium text-slate-300">
+                  Recipient Email *
                 </label>
                 <input
                   type="email"
                   name="to"
                   required
                   placeholder="recipient@example.com"
-                  className="w-full px-4 py-2 rounded-lg border border-gray-300 dark:border-gray-700 bg-white dark:bg-gray-800 text-slate-900 dark:text-white focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                  className="w-full px-3.5 py-2 rounded-xl border border-slate-700 bg-slate-950 text-white placeholder-slate-500 focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500 text-sm"
                 />
               </div>
-              <div>
-                <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
-                  Subject *
+
+              <div className="space-y-1">
+                <label className="block text-xs font-medium text-slate-300">
+                  Subject Line *
                 </label>
                 <input
                   type="text"
                   name="subject"
                   required
-                  className="w-full px-4 py-2 rounded-lg border border-gray-300 dark:border-gray-700 bg-white dark:bg-gray-800 text-slate-900 dark:text-white focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                  placeholder="Project Consultation Update"
+                  className="w-full px-3.5 py-2 rounded-xl border border-slate-700 bg-slate-950 text-white placeholder-slate-500 focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500 text-sm"
                 />
               </div>
-              <div>
-                <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
-                  Message *
+
+              <div className="space-y-1">
+                <label className="block text-xs font-medium text-slate-300">
+                  Message Content *
                 </label>
                 <textarea
                   name="message"
                   required
-                  rows={6}
-                  className="w-full px-4 py-2 rounded-lg border border-gray-300 dark:border-gray-700 bg-white dark:bg-gray-800 text-slate-900 dark:text-white focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                  rows={5}
+                  placeholder="Write message details..."
+                  className="w-full px-3.5 py-2.5 rounded-xl border border-slate-700 bg-slate-950 text-white placeholder-slate-500 focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500 text-sm leading-relaxed"
                 />
               </div>
-              <div className="flex justify-end gap-3">
+
+              <div className="flex justify-end gap-3 pt-2">
                 <button
                   type="button"
                   onClick={() => setShowModal(false)}
-                  className="px-4 py-2 text-gray-600 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-800 rounded-lg transition-colors"
+                  className="px-4 py-2 text-xs font-medium text-slate-400 hover:text-white bg-slate-900 hover:bg-slate-800 border border-slate-800 rounded-xl transition-colors"
                 >
                   Cancel
                 </button>
                 <button
                   type="submit"
                   disabled={sending}
-                  className="px-4 py-2 bg-green-600 hover:bg-green-700 text-white rounded-lg font-medium transition-colors disabled:opacity-50"
+                  className="px-5 py-2 bg-emerald-600 hover:bg-emerald-500 text-white text-xs font-semibold rounded-xl transition-all shadow-md shadow-emerald-500/20 disabled:opacity-50 flex items-center gap-1.5"
                 >
-                  {sending ? 'Sending...' : 'Send Email'}
+                  {sending && <ArrowPathIcon className="w-3.5 h-3.5 animate-spin" />}
+                  <span>{sending ? 'Sending...' : 'Dispatch Email'}</span>
                 </button>
               </div>
             </form>

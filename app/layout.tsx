@@ -1,91 +1,52 @@
-import type { Metadata } from 'next'
+import type { Metadata, Viewport } from 'next'
 import { Inter } from 'next/font/google'
 import './globals.css'
 import { Providers } from './providers'
-import Navbar from '@/components/Navbar'
-import Footer from '@/components/Footer'
-
-const inter = Inter({ subsets: ['latin'] })
-
+import SiteShell from '@/components/SiteShell'
+import TopLoader from '@/components/TopLoader'
+import { developer, siteUrl } from '@/lib/profile'
+const inter = Inter({
+  subsets: ['latin'],
+  variable: '--font-sans',
+  display: 'swap',
+  weight: ['400', '500', '600', '700', '800'],
+})
 export const metadata: Metadata = {
-  metadataBase: new URL('https://solomonelijah.online'),
+  metadataBase: new URL(siteUrl),
   title: {
-    default: 'Solomon Elijah - Full-Stack Developer | Building Scalable Systems',
+    default: 'Solomon Elijah | Full-Stack Software Developer',
     template: '%s | Solomon Elijah',
   },
-  description: 'Full-Stack Software Developer specializing in building production-ready web apps, mobile apps, APIs, and scalable platforms. 5+ years of experience delivering high-performance systems.',
-  keywords: [
-    'Full-Stack Developer',
-    'Web Developer',
-    'Mobile Developer',
-    'React Developer',
-    'Next.js Developer',
-    'Node.js Developer',
-    'TypeScript',
-    'Solomon Elijah',
-    'Software Engineer',
-    'API Development',
-    'Portfolio',
-  ],
-  authors: [{ name: 'Solomon Elijah' }],
-  creator: 'Solomon Elijah',
+  description:
+    'Explore Solomon Elijah’s web, mobile, and API projects. Full-stack software developer based in Lagos, Nigeria, working with React, Next.js, Laravel, and React Native.',
+  authors: [{ name: developer.name }],
+  creator: developer.name,
   openGraph: {
     type: 'website',
-    locale: 'en_US',
-    url: 'https://solomonelijah.online',
-    siteName: 'Solomon Elijah - Developer Portfolio',
-    title: 'Solomon Elijah - Full-Stack Developer | Building Scalable Systems',
-    description: 'Full-Stack Software Developer specializing in building production-ready web apps, mobile apps, APIs, and scalable platforms.',
-    images: [
-      {
-        url: '/images/og-image.png',
-        width: 1200,
-        height: 630,
-        alt: 'Solomon Elijah - Full-Stack Developer',
-      },
-    ],
+    locale: 'en_GB',
+    siteName: 'Solomon Elijah — Portfolio',
+    images: [{ url: '/opengraph-image', width: 1200, height: 630 }],
   },
-  twitter: {
-    card: 'summary_large_image',
-    title: 'Solomon Elijah - Full-Stack Developer',
-    description: 'Full-Stack Software Developer specializing in building production-ready web apps, mobile apps, APIs, and scalable platforms.',
-    images: ['/images/og-image.png'],
-    creator: '@solomonelijah',
-  },
-  robots: {
-    index: true,
-    follow: true,
-    googleBot: {
-      index: true,
-      follow: true,
-      'max-video-preview': -1,
-      'max-image-preview': 'large',
-      'max-snippet': -1,
-    },
-  },
-  verification: {
-    google: 'your-google-verification-code',
-  },
+  twitter: { card: 'summary_large_image', images: ['/opengraph-image'] },
+  robots: { index: true, follow: true },
+  icons: { icon: '/icon.svg', apple: '/apple-touch-icon.png' },
 }
-
+export const viewport: Viewport = {
+  width: 'device-width',
+  initialScale: 1,
+  themeColor: '#f4f6fb',
+}
 export default function RootLayout({
   children,
 }: {
   children: React.ReactNode
 }) {
   return (
-    <html lang="en" suppressHydrationWarning>
-      <head>
-        <link rel="canonical" href="https://solomonelijah.online" />
-        <link rel="icon" href="/favicon.ico" />
-        <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
-        <meta name="theme-color" content="#0B1120" />
-      </head>
-      <body className={`${inter.className} bg-white dark:bg-navy text-slate-900 dark:text-gray-200`}>
+    <html lang="en" suppressHydrationWarning data-scroll-behavior="smooth">
+      <body className={`${inter.variable} ${inter.className}`}>
         <Providers>
-          <Navbar />
-          <main className="min-h-screen pt-16">{children}</main>
-          <Footer />
+          <TopLoader />
+          <SiteShell>{children}</SiteShell>
         </Providers>
       </body>
     </html>

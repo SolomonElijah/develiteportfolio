@@ -1,101 +1,143 @@
-import Hero from '@/components/Hero'
-import Projects from '@/components/Projects'
-import AboutPreview from '@/components/AboutPreview'
-import TechStack from '@/components/TechStack'
-import CTA from '@/components/CTA'
-import { getFeaturedProjects } from '@/lib/data'
-import Image from 'next/image'
 import Link from 'next/link'
-import { ArrowRightIcon } from '@heroicons/react/24/outline'
-
+import Hero from '@/components/Hero'
+import ProjectCard from '@/components/ProjectCard'
+import Arrow from '@/components/Arrow'
+import ContactBanner from '@/components/ContactBanner'
+import { getFeaturedProjects } from '@/lib/data'
+import { skillGroups, siteUrl } from '@/lib/profile'
+import { pageMetadata, personSchema, serializeJsonLd } from '@/lib/seo'
+export const revalidate = 300
+export const metadata = pageMetadata(
+  'Full-Stack Software Developer',
+  'Solomon Elijah builds web applications, mobile apps, and APIs with React, Next.js, Laravel, and React Native. Explore selected projects and get in touch.',
+  '/',
+)
 export default async function Home() {
-  const featuredProjects = await getFeaturedProjects()
- const jsonLd = {
-    '@context': 'https://schema.org',
-    '@type': 'Person',
-    name: 'Solomon Elijah',
-    jobTitle: 'Full-Stack Software Developer',
-    url: 'https://solomonelijah.dev',
-    sameAs: [
-      'https://github.com/solomonelijah',
-      'https://linkedin.com/in/solomonelijah',
-      'https://twitter.com/solomonelijah',
-    ],
-    knowsAbout: [
-      'React', 'Next.js', 'TypeScript', 'Node.js', 'React Native Expo', 'Laravel',
-      'PostgreSQL', 'MongoDB', 'AWS', 'Docker', 'Kubernetes', 'MySQL', 'Redis',
-      'Web Development', 'Mobile Development', 'API Design', 'System Architecture',
-    ],
-  }
+  const projects = (await getFeaturedProjects()).slice(0, 4)
   return (
     <>
-
-     <script
+      <script
         type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+        dangerouslySetInnerHTML={{
+          __html: serializeJsonLd({
+            '@context': 'https://schema.org',
+            '@graph': [
+              personSchema,
+              {
+                '@type': 'WebSite',
+                '@id': `${siteUrl}/#website`,
+                url: siteUrl,
+                name: 'Solomon Elijah — Developer Portfolio',
+                author: { '@id': `${siteUrl}/#person` },
+              },
+            ],
+          }),
+        }}
       />
-
       <Hero />
-
-      {/* Featured Work Highlights – replaces duplicate stats */}
-      <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16 border-b border-gray-200 dark:border-gray-800">
-        <div className="text-center mb-10">
-          <h2 className="text-2xl md:text-3xl font-bold text-slate-900 dark:text-white mb-3">
-            Recent Highlights
-          </h2>
-          <p className="text-slate-600 dark:text-gray-400 max-w-2xl mx-auto">
-            A glimpse of the systems I've built – from payment gateways to analytics dashboards.
-          </p>
+      <div className="technology-strip">
+        <div className="container">
+          <span className="eyebrow">TOOLS OF THE TRADE</span>
+          <div>
+            {[
+              'Next.js',
+              'React Native',
+              'TypeScript',
+              'Laravel',
+              'Node.js',
+              'MySQL',
+              'PostgreSQL',
+            ].map((tech) => (
+              <span key={tech}>{tech}</span>
+            ))}
+          </div>
         </div>
-
-        <div className="grid md:grid-cols-3 gap-6">
-          {featuredProjects.slice(0, 3).map((project) => (
-            <Link
-              key={project.slug}
-              href={`/projects/${project.slug}`}
-              className="group block bg-white dark:bg-navy-card rounded-xl overflow-hidden border border-gray-200 dark:border-gray-800 shadow-sm hover:shadow-md transition-all"
-            >
-              <div className="relative h-40 w-full bg-gray-100 dark:bg-gray-800">
-                <Image
-                  src={project.image}
-                  alt={project.title}
-                  fill
-                  className="object-cover group-hover:scale-105 transition-transform duration-500"
-                  sizes="(max-width: 768px) 100vw, 33vw"
-                />
-                <div className="absolute top-3 right-3">
-                  <span className="px-2 py-1 bg-black/60 backdrop-blur-sm text-white text-xs rounded-md">
-                    {project.type}
-                  </span>
-                </div>
-              </div>
-              <div className="p-5">
-                <h3 className="font-semibold text-slate-900 dark:text-white group-hover:text-blue-600 dark:group-hover:text-blue-400 transition-colors">
-                  {project.title}
-                </h3>
-                <p className="text-sm text-slate-500 dark:text-gray-400 mt-1 line-clamp-2">
-                  {project.description}
-                </p>
-              </div>
-            </Link>
-          ))}
-        </div>
-
-        <div className="text-center mt-10">
-          <Link
-            href="/projects"
-            className="inline-flex items-center gap-2 text-blue-600 dark:text-blue-400 font-medium hover:gap-3 transition-all"
-          >
-            View all projects
-            <ArrowRightIcon className="w-4 h-4" />
+      </div>
+      <section className="container section" aria-labelledby="work-title">
+        <div className="section-heading">
+          <div>
+            <p className="eyebrow">01 / SELECTED WORK</p>
+            <h2 id="work-title">
+              Real problems. <span className="gradient-text">Thoughtful solutions</span>.
+            </h2>
+          </div>
+          <Link href="/projects" className="text-link">
+            All projects <Arrow diagonal />
           </Link>
         </div>
+        <p className="section-description">
+          A selection of web and mobile products, with a closer look at the
+          thinking and technology behind each one.
+        </p>
+        <div className="project-grid">
+          {projects.map((project, index) => (
+            <ProjectCard key={project.slug} project={project} index={index} />
+          ))}
+        </div>
+        {projects.length === 0 && (
+          <p className="empty-state">
+            Project details are being updated.{' '}
+            <Link href="/contact">
+              Ask me about my work <Arrow />
+            </Link>
+          </p>
+        )}
       </section>
-
-      <AboutPreview />
-      <TechStack />
-      <Projects />
-      <CTA />
+      <section className="about-section">
+        <div className="container about-preview">
+          <div>
+            <p className="eyebrow">02 / BEHIND THE WORK</p>
+            <h2>
+              Curious by nature.
+              <br />
+              Practical by design.
+            </h2>
+          </div>
+          <div>
+            <p className="lead">
+              I’m Solomon Elijah, a full-stack software developer based in
+              Lagos, Nigeria.
+            </p>
+            <p>
+              I work across web interfaces, mobile applications, and backend
+              services. My projects span commerce, payments, travel, and
+              logistics — products where the details of the user journey and the
+              underlying system both matter.
+            </p>
+            <Link href="/about" className="text-link">
+              Get to know me <Arrow diagonal />
+            </Link>
+          </div>
+        </div>
+      </section>
+      <section className="container section" aria-labelledby="skills-title">
+        <div className="section-heading">
+          <div>
+            <p className="eyebrow">03 / WHAT I BRING</p>
+            <h2 id="skills-title">
+              Connected thinking, <span className="gradient-text">end to end</span>.
+            </h2>
+          </div>
+          <span className="section-aside">
+            An interface is only the beginning.
+          </span>
+        </div>
+        <div className="capability-grid">
+          {skillGroups.map((group, index) => (
+            <article className="capability-card" key={group.title}>
+              <span className="capability-number">0{index + 1}</span>
+              <h3>{group.title}</h3>
+              <p>{group.description}</p>
+              <div className="tags">
+                {group.skills.map((skill) => (
+                  <span key={skill}>{skill}</span>
+                ))}
+              </div>
+            </article>
+          ))}
+        </div>
+      </section>
+      <ContactBanner />
     </>
   )
 }

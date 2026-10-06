@@ -11,19 +11,38 @@ interface StatCardProps {
     } & RefAttributes<SVGSVGElement>
   >
   color: 'blue' | 'purple' | 'green' | 'orange' | 'emerald' | 'red' | 'teal'
+  subtitle?: string
 }
 
-const colorClasses = {
-  blue: 'bg-blue-50 dark:bg-blue-900/20 text-blue-600 dark:text-blue-400',
-  purple:
-    'bg-purple-50 dark:bg-purple-900/20 text-purple-600 dark:text-purple-400',
-  green: 'bg-green-50 dark:bg-green-900/20 text-green-600 dark:text-green-400',
-  orange:
-    'bg-orange-50 dark:bg-orange-900/20 text-orange-600 dark:text-orange-400',
-  emerald:
-    'bg-emerald-50 dark:bg-emerald-900/20 text-emerald-600 dark:text-emerald-400',
-  red: 'bg-red-50 dark:bg-red-900/20 text-red-600 dark:text-red-400',
-  teal: 'bg-teal-50 dark:bg-teal-900/20 text-teal-600 dark:text-teal-400',
+const colorStyles = {
+  blue: {
+    iconBg: 'bg-blue-500/10 text-blue-400 border-blue-500/20',
+    glow: 'from-blue-600/10 to-transparent',
+  },
+  purple: {
+    iconBg: 'bg-purple-500/10 text-purple-400 border-purple-500/20',
+    glow: 'from-purple-600/10 to-transparent',
+  },
+  green: {
+    iconBg: 'bg-emerald-500/10 text-emerald-400 border-emerald-500/20',
+    glow: 'from-emerald-600/10 to-transparent',
+  },
+  emerald: {
+    iconBg: 'bg-emerald-500/10 text-emerald-400 border-emerald-500/20',
+    glow: 'from-emerald-600/10 to-transparent',
+  },
+  orange: {
+    iconBg: 'bg-amber-500/10 text-amber-400 border-amber-500/20',
+    glow: 'from-amber-600/10 to-transparent',
+  },
+  red: {
+    iconBg: 'bg-rose-500/10 text-rose-400 border-rose-500/20',
+    glow: 'from-rose-600/10 to-transparent',
+  },
+  teal: {
+    iconBg: 'bg-teal-500/10 text-teal-400 border-teal-500/20',
+    glow: 'from-teal-600/10 to-transparent',
+  },
 }
 
 export default function StatCard({
@@ -31,18 +50,39 @@ export default function StatCard({
   value,
   icon: Icon,
   color,
+  subtitle,
 }: StatCardProps) {
+  const style = colorStyles[color] || colorStyles.blue
+
   return (
-    <div className="bg-white dark:bg-navy-card rounded-xl p-6 border border-gray-200 dark:border-gray-800 shadow-sm">
-      <div className="flex items-center justify-between">
-        <div>
-          <p className="text-sm text-gray-500 dark:text-gray-400">{title}</p>
-          <p className="text-2xl font-bold text-slate-900 dark:text-white mt-1">
+    <div className="relative group overflow-hidden bg-slate-900/60 hover:bg-slate-900/90 border border-slate-800/80 hover:border-slate-700 rounded-2xl p-6 transition-all duration-300 shadow-sm">
+      <div
+        className={cn(
+          'absolute top-0 right-0 w-32 h-32 bg-gradient-to-bl rounded-bl-full pointer-events-none opacity-50 transition-opacity group-hover:opacity-100',
+          style.glow,
+        )}
+      />
+
+      <div className="relative flex items-start justify-between">
+        <div className="space-y-1">
+          <p className="text-xs font-medium uppercase tracking-wider text-slate-400">
+            {title}
+          </p>
+          <p className="text-2xl sm:text-3xl font-bold tracking-tight text-white pt-1">
             {value}
           </p>
+          {subtitle && (
+            <p className="text-xs text-slate-500 pt-0.5">{subtitle}</p>
+          )}
         </div>
-        <div className={cn('p-3 rounded-xl', colorClasses[color])}>
-          <Icon className="w-6 h-6" />
+
+        <div
+          className={cn(
+            'p-3 rounded-xl border flex items-center justify-center shrink-0 shadow-inner',
+            style.iconBg,
+          )}
+        >
+          <Icon className="w-5 h-5" />
         </div>
       </div>
     </div>

@@ -1,7 +1,7 @@
 'use client'
 
 import { useState } from 'react'
-import { PlusIcon } from '@heroicons/react/24/outline'
+import { PlusIcon, ArrowPathIcon } from '@heroicons/react/24/outline'
 import { createContact } from '@/app/admin/(dashboard)/contacts/actions'
 import { toast } from 'sonner'
 
@@ -17,7 +17,7 @@ export default function AddContactButton() {
 
     try {
       await createContact(formData)
-      toast.success('Contact added')
+      toast.success('Contact added successfully')
       setShowModal(false)
       window.location.reload()
     } catch (error: any) {
@@ -31,75 +31,90 @@ export default function AddContactButton() {
     <>
       <button
         onClick={() => setShowModal(true)}
-        className="flex items-center gap-2 bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg text-sm font-medium transition-colors"
+        className="flex items-center gap-1.5 px-3 py-2 rounded-xl text-xs font-semibold bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-500 hover:to-indigo-500 text-white shadow-md shadow-blue-500/20 transition-all"
       >
-        <PlusIcon className="w-5 h-5" />
-        Add Contact
+        <PlusIcon className="w-4 h-4" />
+        <span>Add Contact</span>
       </button>
 
       {showModal && (
-        <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50">
-          <div className="bg-white dark:bg-navy-card rounded-xl p-6 w-full max-w-md border border-gray-200 dark:border-gray-800">
-            <h3 className="text-lg font-semibold text-slate-900 dark:text-white mb-4">
-              Add Contact
-            </h3>
+        <div className="fixed inset-0 bg-slate-950/80 backdrop-blur-sm flex items-center justify-center z-50 p-4">
+          <div className="bg-slate-900 border border-slate-800 rounded-2xl p-6 w-full max-w-md shadow-2xl space-y-4">
+            <div>
+              <h3 className="text-lg font-semibold text-white">
+                Add New Contact
+              </h3>
+              <p className="text-xs text-slate-400 mt-0.5">
+                Manually record a client inquiry or prospect.
+              </p>
+            </div>
+
             <form onSubmit={handleSubmit} className="space-y-4">
-              <div>
-                <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+              <div className="space-y-1">
+                <label className="block text-xs font-medium text-slate-300">
                   Name *
                 </label>
                 <input
                   type="text"
                   name="name"
                   required
-                  className="w-full px-4 py-2 rounded-lg border border-gray-300 dark:border-gray-700 bg-white dark:bg-gray-800 text-slate-900 dark:text-white focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                  placeholder="John Doe"
+                  className="w-full px-3.5 py-2 rounded-xl border border-slate-700 bg-slate-950 text-white placeholder-slate-500 focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500 text-sm"
                 />
               </div>
-              <div>
-                <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+
+              <div className="space-y-1">
+                <label className="block text-xs font-medium text-slate-300">
                   Email *
                 </label>
                 <input
                   type="email"
                   name="email"
                   required
-                  className="w-full px-4 py-2 rounded-lg border border-gray-300 dark:border-gray-700 bg-white dark:bg-gray-800 text-slate-900 dark:text-white focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                  placeholder="john@example.com"
+                  className="w-full px-3.5 py-2 rounded-xl border border-slate-700 bg-slate-950 text-white placeholder-slate-500 focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500 text-sm"
                 />
               </div>
-              <div>
-                <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+
+              <div className="space-y-1">
+                <label className="block text-xs font-medium text-slate-300">
                   Phone
                 </label>
                 <input
                   type="tel"
                   name="phone"
-                  className="w-full px-4 py-2 rounded-lg border border-gray-300 dark:border-gray-700 bg-white dark:bg-gray-800 text-slate-900 dark:text-white focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                  placeholder="+1 555-0199"
+                  className="w-full px-3.5 py-2 rounded-xl border border-slate-700 bg-slate-950 text-white placeholder-slate-500 focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500 text-sm"
                 />
               </div>
-              <div>
-                <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
-                  Message
+
+              <div className="space-y-1">
+                <label className="block text-xs font-medium text-slate-300">
+                  Message / Details
                 </label>
                 <textarea
                   name="message"
                   rows={3}
-                  className="w-full px-4 py-2 rounded-lg border border-gray-300 dark:border-gray-700 bg-white dark:bg-gray-800 text-slate-900 dark:text-white focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                  placeholder="Project inquiry details..."
+                  className="w-full px-3.5 py-2 rounded-xl border border-slate-700 bg-slate-950 text-white placeholder-slate-500 focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500 text-sm"
                 />
               </div>
-              <div className="flex justify-end gap-3">
+
+              <div className="flex justify-end gap-3 pt-2">
                 <button
                   type="button"
                   onClick={() => setShowModal(false)}
-                  className="px-4 py-2 text-gray-600 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-800 rounded-lg transition-colors"
+                  className="px-4 py-2 text-xs font-medium text-slate-400 hover:text-white bg-slate-900 hover:bg-slate-800 border border-slate-800 rounded-xl transition-colors"
                 >
                   Cancel
                 </button>
                 <button
                   type="submit"
                   disabled={loading}
-                  className="px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg font-medium transition-colors disabled:opacity-50"
+                  className="px-5 py-2 bg-blue-600 hover:bg-blue-500 text-white text-xs font-semibold rounded-xl transition-all shadow-md shadow-blue-500/20 disabled:opacity-50 flex items-center gap-1.5"
                 >
-                  {loading ? 'Adding...' : 'Add Contact'}
+                  {loading && <ArrowPathIcon className="w-3.5 h-3.5 animate-spin" />}
+                  <span>{loading ? 'Adding...' : 'Save Contact'}</span>
                 </button>
               </div>
             </form>

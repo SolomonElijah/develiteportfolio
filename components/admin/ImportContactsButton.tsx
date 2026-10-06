@@ -1,7 +1,7 @@
 'use client'
 
 import { useState, useRef } from 'react'
-import { ArrowUpTrayIcon } from '@heroicons/react/24/outline'
+import { ArrowUpTrayIcon, ArrowPathIcon } from '@heroicons/react/24/outline'
 import { importContacts } from '@/app/admin/(dashboard)/contacts/actions'
 import { toast } from 'sonner'
 
@@ -13,22 +13,39 @@ export default function ImportContactsButton() {
     const lines = text.trim().split('\n')
     if (lines.length < 2) return []
 
-    const headers = lines[0].split(',').map(h => h.trim().toLowerCase().replace(/"/g, ''))
+    const headers = lines[0]
+      .split(',')
+      .map((h) => h.trim().toLowerCase().replace(/"/g, ''))
 
-    const nameIdx = headers.findIndex(h => h === 'name' || h === 'full name' || h === 'fullname')
-    const emailIdx = headers.findIndex(h => h === 'email' || h === 'email address')
-    const phoneIdx = headers.findIndex(h => h === 'phone' || h === 'phone number' || h === 'tel')
-    const messageIdx = headers.findIndex(h => h === 'message' || h === 'note' || h === 'notes')
+    const nameIdx = headers.findIndex(
+      (h) => h === 'name' || h === 'full name' || h === 'fullname',
+    )
+    const emailIdx = headers.findIndex(
+      (h) => h === 'email' || h === 'email address',
+    )
+    const phoneIdx = headers.findIndex(
+      (h) => h === 'phone' || h === 'phone number' || h === 'tel',
+    )
+    const messageIdx = headers.findIndex(
+      (h) => h === 'message' || h === 'note' || h === 'notes',
+    )
 
     if (nameIdx === -1 || emailIdx === -1) {
       throw new Error('CSV must have "name" and "email" columns')
     }
 
-    const contacts: { name: string; email: string; phone?: string; message?: string }[] = []
+    const contacts: {
+      name: string
+      email: string
+      phone?: string
+      message?: string
+    }[] = []
 
     for (let i = 1; i < lines.length; i++) {
-      const values = lines[i].split(',').map(v => v.trim().replace(/^"|"$/g, ''))
-      
+      const values = lines[i]
+        .split(',')
+        .map((v) => v.trim().replace(/^"|"$/g, ''))
+
       const name = values[nameIdx]
       const email = values[emailIdx]
 
@@ -89,12 +106,17 @@ export default function ImportContactsButton() {
         className="hidden"
       />
       <button
+        type="button"
         onClick={() => fileInputRef.current?.click()}
         disabled={loading}
-        className="flex items-center gap-2 border border-gray-300 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-800 text-slate-700 dark:text-gray-300 px-4 py-2 rounded-lg text-sm font-medium transition-colors disabled:opacity-50"
+        className="flex items-center gap-1.5 px-3 py-2 rounded-xl text-xs font-semibold bg-slate-900 hover:bg-slate-800 text-slate-300 hover:text-white border border-slate-700 transition-all disabled:opacity-50"
       >
-        <ArrowUpTrayIcon className="w-5 h-5" />
-        {loading ? 'Importing...' : 'Import CSV'}
+        {loading ? (
+          <ArrowPathIcon className="w-4 h-4 animate-spin text-blue-400" />
+        ) : (
+          <ArrowUpTrayIcon className="w-4 h-4" />
+        )}
+        <span>{loading ? 'Importing...' : 'Import CSV'}</span>
       </button>
     </>
   )

@@ -1,150 +1,62 @@
 'use server'
-
-import { revalidatePath } from 'next/cache'
+import { revalidatePath, revalidateTag } from 'next/cache'
 import { createAdminClient } from '@/lib/supabase/server'
-import { generateSlug } from '@/lib/utils'
-
-export async function createProject(formData: FormData) {
-  const supabase = createAdminClient()
-
-  const title = formData.get('title') as string
-  const type = formData.get('type') as 'Web' | 'Mobile' | 'API'
-  const description = formData.get('description') as string
-  const problem = formData.get('problem') as string
-  const solution = formData.get('solution') as string
-  const architecture = formData.get('architecture') as string
-  const imageUrl = formData.get('imageUrl') as string
-  const demoUrl = formData.get('demoUrl') as string
-  const featured = formData.get('featured') === 'true'
-
-  let features: string[] = []
-  let stack: string[] = []
+import { projectInput, recordId } from '@/lib/admin-validation'
+function refresh() {
   try {
-    features = JSON.parse(formData.get('features') as string)
-    stack = JSON.parse(formData.get('stack') as string)
-  } catch (error) {
-    console.error('Error parsing JSON:', error)
-  }
-
-  const slug = generateSlug(title)
-
-  const { error } = await supabase.from('projects').insert({
-    title,
-    slug,
-    type,
-    description,
-    problem,
-    solution,
-    architecture,
-    features,
-    stack,
-    image_url: imageUrl,
-    demo_url: demoUrl || null,
-    featured,
-  })
-
-  if (error) {
-    throw new Error(error.message)
-  }
-
+    revalidateTag('projects', 'max')
+  } catch {}
   revalidatePath('/admin/projects')
-  revalidatePath('/projects')
+  revalidatePath('/projects', 'layout')
   revalidatePath('/')
+  revalidatePath('/sitemap.xml')
+  revalidatePath('/llms.txt')
+  revalidatePath('/profile.json')
 }
-
-export async function updateProject(id: string, formData: FormData) {
-  const supabase = createAdminClient()
-
-  const title = formData.get('title') as string
-  const type = formData.get('type') as 'Web' | 'Mobile' | 'API'
-  const description = formData.get('description') as string
-  const problem = formData.get('problem') as string
-  const solution = formData.get('solution') as string
-  const architecture = formData.get('architecture') as string
-  const imageUrl = formData.get('imageUrl') as string
-  const demoUrl = formData.get('demoUrl') as string
-  const featured = formData.get('featured') === 'true'
-
-  let features: string[] = []
-  let stack: string[] = []
-  try {
-    features = JSON.parse(formData.get('features') as string)
-    stack = JSON.parse(formData.get('stack') as string)
-  } catch (error) {
-    console.error('Error parsing JSON:', error)
-  }
-
-  const slug = generateSlug(title)
-
-  const { error } = await supabase
-    .from('projects')
-    .update({
-      title,
-      slug,
-      type,
-      description,
-      problem,
-      solution,
-      architecture,
-      features,
-      stack,
-      image_url: imageUrl,
-      demo_url: demoUrl || null,
-      featured,
-      updated_at: new Date().toISOString(),
-    })
-    .eq('id', id)
-
+export async function createProject(form: FormData) {
+  const db = await createAdminClient()
+  const input = projectInput(form)
+  const { error } = await db.from('projects').insert(input)
   if (error) {
-    throw new Error(error.message)
+    console.error('Create project error:', error)
+    throw new Error(
+      error.message?.includes('duplicate key') || error.code === '23505'
+        ? 'A project with this title or slug already exists.'
+        : `Could not create project: ${error.message}`,
+    )
   }
-
-  revalidatePath('/admin/projects')
+  refresh()
+}
+export async function updateProject(id: string, form: FormData) {
+  const db = await createAdminClient()
+  recordId(id)
+  const input = projectInput(form)
+  const { error } = await db
+    .from('projects')
+    .update({ ...input, updated_at: new Date().toISOString() })
+    .eq('id', id)
+  if (error) {
+    console.error('Update project error:', error)
+    throw new Error(`Could not update project: ${error.message}`)
+  }
+  refresh()
   revalidatePath(`/admin/projects/edit/${id}`)
-  revalidatePath('/projects')
-  revalidatePath('/')
 }
-
 export async function deleteProject(id: string) {
-  const supabase = createAdminClient()
-
-  const { data: project } = await supabase
-    .from('projects')
-    .select('image_url')
-    .eq('id', id)
-    .single()
-
-  if (project?.image_url) {
-    const fileName = project.image_url.split('/').pop()
-    if (fileName) {
-      await supabase.storage.from('projects').remove([fileName])
-    }
-  }
-
-  const { error } = await supabase.from('projects').delete().eq('id', id)
-
-  if (error) {
-    throw new Error(error.message)
-  }
-
-  revalidatePath('/admin/projects')
-  revalidatePath('/projects')
-  revalidatePath('/')
+  const db = await createAdminClient()
+  recordId(id)
+  const { error } = await db.from('projects').delete().eq('id', id)
+  if (error) throw new Error('Could not delete the project.')
+  refresh()
 }
-
 export async function toggleFeatured(id: string, featured: boolean) {
-  const supabase = createAdminClient()
-
-  const { error } = await supabase
+  const db = await createAdminClient()
+  recordId(id)
+  if (typeof featured !== 'boolean') throw new Error('Invalid featured state.')
+  const { error } = await db
     .from('projects')
     .update({ featured: !featured })
     .eq('id', id)
-
-  if (error) {
-    throw new Error(error.message)
-  }
-
-  revalidatePath('/admin/projects')
-  revalidatePath('/projects')
-  revalidatePath('/')
+  if (error) throw new Error('Could not update featured state.')
+  refresh()
 }

@@ -32,3 +32,6 @@ Thumbs.db
 
 # typescript
 *.tsbuildinfo
+artifacts/
+test-results/
+playwright-report/

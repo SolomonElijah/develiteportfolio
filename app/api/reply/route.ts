@@ -1,44 +1,51 @@
 import { NextRequest, NextResponse } from 'next/server'
-import { Resend } from 'resend'
-
-const resend = new Resend(process.env.RESEND_API_KEY!)
-const FROM_EMAIL = process.env.RESEND_FROM_EMAIL || 'onboarding@resend.dev'
-
+import { getAuthUser } from '@/lib/supabase/server'
+import { isAdmin } from '@/lib/supabase/authorization'
+import { sendContactReply } from '@/lib/email'
+import { email, text } from '@/lib/validation'
+import { allowRequest, readJson, sameOrigin } from '@/lib/http'
 export async function POST(request: NextRequest) {
-  try {
-    const { to, subject, message } = await request.json()
-
-    const recipients = Array.isArray(to) ? to : [to]
-
-    const html = `
-      <div style="font-family: sans-serif; max-width: 600px; margin: 0 auto;">
-        <h2 style="color: #2563EB;">${subject}</h2>
-        <div style="color: #374151; white-space: pre-wrap;">${message}</div>
-        <hr style="border: none; border-top: 1px solid #e5e7eb; margin: 24px 0;" />
-        <p style="color: #6b7280; font-size: 14px;">
-          Best regards,<br />
-          Solomon Elijah<br />
-          Full-Stack Developer
-        </p>
-      </div>
-    `
-
-    const { data, error } = await resend.emails.send({
-      from: `Solomon Elijah <${FROM_EMAIL}>`,
-      to: recipients,
-      subject,
-      html,
-    })
-
-    if (error) {
-      return NextResponse.json({ error: error.message }, { status: 500 })
-    }
-
-    return NextResponse.json({ success: true, data })
-  } catch (error: any) {
+  const user = await getAuthUser()
+  if (!isAdmin(user))
+    return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
+  if (!sameOrigin(request))
+    return NextResponse.json({ error: 'Invalid origin' }, { status: 403 })
+  if (!allowRequest(`reply:${user!.id}`, 10))
     return NextResponse.json(
-      { error: error.message || 'Failed to send email' },
-      { status: 500 }
+      { error: 'Too many email requests. Try again later.' },
+      { status: 429 },
+    )
+  let recipients: string[], subject: string, message: string
+  try {
+    const body = await readJson(request, 150000)
+    const raw = Array.isArray(body.to) ? body.to : [body.to]
+    if (!raw.length || raw.length > 50)
+      throw new Error('Choose between 1 and 50 recipients.')
+    recipients = Array.from(new Set(raw.map(email)))
+    subject = text(body.subject, 'Subject', 200)
+    if (/[\r\n]/.test(subject)) throw new Error('Subject must be one line.')
+    message = text(body.message, 'Message', 10000)
+  } catch (error) {
+    return NextResponse.json(
+      {
+        error:
+          error instanceof Error ? error.message : 'Invalid email request.',
+      },
+      { status: 400 },
+    )
+  }
+  try {
+    await sendContactReply({ to: recipients, subject, message })
+    return NextResponse.json({ success: true })
+  } catch (error: any) {
+    console.error('Email reply error:', error)
+    return NextResponse.json(
+      {
+        error:
+          error?.message ||
+          'Email could not be sent. Check the provider configuration before retrying.',
+      },
+      { status: 503 },
     )
   }
 }
