@@ -3,6 +3,7 @@ import { unstable_cache } from 'next/cache'
 import { createServiceClient } from './supabase/service'
 import { safeImage, safeExternalUrl, stringArray } from './validation'
 import snapshot from './projects.snapshot.json'
+import blogSnapshot from './blog.snapshot.json'
 import { revisePlaceholderArticle } from './article-content'
 
 export { developer } from './profile'
@@ -140,10 +141,13 @@ const fetchBlogPostsFromDb = async (): Promise<BlogPost[]> => {
       .eq('published', true)
       .order('created_at', { ascending: false })
     if (error) throw new Error('Article query failed')
-    return (data || []).map(normalizePost)
+    const list = data && data.length > 0 ? data : (blogSnapshot as BlogPost[])
+    return list.map(normalizePost)
   } catch {
-    console.warn('Published article source unavailable.')
-    return []
+    console.warn(
+      'Published article database source unavailable; serving blog snapshot.',
+    )
+    return (blogSnapshot as BlogPost[]).map(normalizePost)
   }
 }
 
