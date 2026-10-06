@@ -1,5 +1,5 @@
-import { developer } from '@/lib/profile'
-import { pageMetadata } from '@/lib/seo'
+import { developer, siteUrl } from '@/lib/profile'
+import { pageMetadata, serializeJsonLd } from '@/lib/seo'
 import ContactForm from '@/components/ContactForm'
 import Arrow from '@/components/Arrow'
 export const metadata = pageMetadata(
@@ -9,7 +9,28 @@ export const metadata = pageMetadata(
 )
 export default function ContactPage() {
   return (
-    <div className="container">
+    <>
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{
+          __html: serializeJsonLd({
+            '@context': 'https://schema.org',
+            '@type': 'ContactPage',
+            name: 'Contact Solomon Elijah',
+            url: `${siteUrl}/contact`,
+            description:
+              'Contact Solomon Elijah about software developer roles, freelance web and mobile projects, or technical collaboration.',
+            mainEntity: {
+              '@type': 'Person',
+              name: developer.name,
+              email: developer.email,
+              telephone: developer.phone,
+              url: siteUrl,
+            },
+          }),
+        }}
+      />
+      <div className="container">
       <header className="page-header">
         <p className="eyebrow">GOOD WORK STARTS WITH A CONVERSATION</p>
         <h1>
@@ -71,5 +92,6 @@ export default function ContactPage() {
         <ContactForm />
       </div>
     </div>
+  </>
   )
 }
