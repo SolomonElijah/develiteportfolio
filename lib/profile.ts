@@ -10,8 +10,20 @@ export const developer = {
   whatsapp: '2349032236191',
   cv: '/solomon-elijah-cv.pdf',
 }
+const envUrl =
+  process.env.NEXT_PUBLIC_SITE_URL ||
+  (process.env.NEXT_PUBLIC_VERCEL_PROJECT_PRODUCTION_URL
+    ? `https://${process.env.NEXT_PUBLIC_VERCEL_PROJECT_PRODUCTION_URL}`
+    : process.env.NEXT_PUBLIC_VERCEL_URL
+      ? `https://${process.env.NEXT_PUBLIC_VERCEL_URL}`
+      : process.env.VERCEL_PROJECT_PRODUCTION_URL
+        ? `https://${process.env.VERCEL_PROJECT_PRODUCTION_URL}`
+        : process.env.VERCEL_URL
+          ? `https://${process.env.VERCEL_URL}`
+          : 'https://solomonelijah.vercel.app')
+
 export const siteUrl = (
-  process.env.NEXT_PUBLIC_SITE_URL || 'https://solomonelijah.online'
+  envUrl.startsWith('http') ? envUrl : `https://${envUrl}`
 ).replace(/\/$/, '')
 export const skillGroups = [
   {

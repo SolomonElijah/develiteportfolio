@@ -5,29 +5,34 @@ export function pageMetadata(
   title: string,
   description: string,
   path: string,
-  image = '/opengraph-image',
+  image = '/og-image.png',
 ): Metadata {
   const fullTitle = `${title} | ${developer.name}`
   const twitterHandle = '@solomonelijah'
-  const imageUrl = image.startsWith('http') ? image : `${siteUrl}${image}`
+  const imageUrl = image.startsWith('http')
+    ? image
+    : `${siteUrl}${image.startsWith('/') ? '' : '/'}${image}`
+  const canonicalUrl = `${siteUrl}${path.startsWith('/') ? '' : '/'}${path}`
 
   return {
     title,
     description,
-    alternates: { canonical: path },
+    alternates: { canonical: canonicalUrl },
     openGraph: {
       title: fullTitle,
       description,
-      url: path,
+      url: canonicalUrl,
       siteName: 'Solomon Elijah — Portfolio',
       locale: 'en_US',
       type: 'website',
       images: [
         {
           url: imageUrl,
+          secureUrl: imageUrl,
           width: 1200,
           height: 630,
           alt: fullTitle,
+          type: 'image/png',
         },
       ],
     },

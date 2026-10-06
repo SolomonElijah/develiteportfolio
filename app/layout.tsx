@@ -36,7 +36,7 @@ export const metadata: Metadata = {
     'Portfolio',
   ],
   alternates: {
-    canonical: '/',
+    canonical: siteUrl,
   },
   openGraph: {
     type: 'website',
@@ -48,9 +48,19 @@ export const metadata: Metadata = {
       'Full-stack software developer based in Lagos, Nigeria, building reliable web and mobile applications with React, Next.js, TypeScript, React Native, Laravel, and Node.js.',
     images: [
       {
-        url: '/opengraph-image',
+        url: `${siteUrl}/og-image.png`,
+        secureUrl: `${siteUrl}/og-image.png`,
         width: 1200,
         height: 630,
+        type: 'image/png',
+        alt: 'Solomon Elijah — Full-Stack Software Developer',
+      },
+      {
+        url: `${siteUrl}/opengraph-image`,
+        secureUrl: `${siteUrl}/opengraph-image`,
+        width: 1200,
+        height: 630,
+        type: 'image/png',
         alt: 'Solomon Elijah — Full-Stack Software Developer',
       },
     ],
@@ -62,14 +72,7 @@ export const metadata: Metadata = {
     title: 'Solomon Elijah | Full-Stack Software Developer',
     description:
       'Full-stack software developer based in Lagos, Nigeria, building reliable web and mobile applications with React, Next.js, TypeScript, React Native, Laravel, and Node.js.',
-    images: [
-      {
-        url: '/opengraph-image',
-        width: 1200,
-        height: 630,
-        alt: 'Solomon Elijah — Full-Stack Software Developer',
-      },
-    ],
+    images: [`${siteUrl}/og-image.png`],
   },
   robots: {
     index: true,
