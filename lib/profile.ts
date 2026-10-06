@@ -8,6 +8,7 @@ export const developer = {
   linkedin: 'https://linkedin.com/in/solomonelijah',
   twitter: 'https://twitter.com/solomonelijah',
   whatsapp: '2349032236191',
+  cv: '/solomon-elijah-cv.pdf',
 }
 export const siteUrl = (
   process.env.NEXT_PUBLIC_SITE_URL || 'https://solomonelijah.online'

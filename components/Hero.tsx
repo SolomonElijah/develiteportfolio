@@ -10,24 +10,30 @@ export default function Hero() {
           <span className="status-dot" /> WEB · MOBILE · APIs
         </div>
         <p className="hero-intro">Hello, I’m Elijah.</p>
-<h1 id="hero-title">
-  I build software
-  <br />
-  that <span className="gradient-text">solves real problems</span><span className="accent">.</span>
-</h1>
-<p className="hero-description">
-  Software developer building reliable web and mobile applications with
-  modern technologies. From intuitive interfaces to scalable APIs and
-  everything in between.
-</p>
+        <h1 id="hero-title">
+          I build software
+          <br />
+          that <span className="gradient-text">solves real problems</span>
+          <span className="accent">.</span>
+        </h1>
+        <p className="hero-description">
+          Software developer building reliable web and mobile applications with
+          modern technologies. From intuitive interfaces to scalable APIs and
+          everything in between.
+        </p>
 
         <div className="hero-actions">
           <Link href="/projects" className="button">
             Explore my work <Arrow />
           </Link>
-          <Link href="/about" className="text-link">
-            A little about me <Arrow diagonal />
-          </Link>
+          <a
+            href={developer.cv}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="text-link"
+          >
+            View my CV <Arrow diagonal />
+          </a>
         </div>
         <div className="hero-meta">
           <span>
