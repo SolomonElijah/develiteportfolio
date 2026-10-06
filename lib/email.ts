@@ -2,7 +2,7 @@ import 'server-only'
 import nodemailer from 'nodemailer'
 import { Resend } from 'resend'
 import { escapeHtml } from './validation'
-import { developer } from './profile'
+import { developer, siteUrl } from './profile'
 
 interface MailOptions {
   from?: string
@@ -134,7 +134,7 @@ ${escapeHtml(message)}
         Best regards,<br />
         <strong style="color: #0f172a;">Solomon Elijah</strong><br />
         Full-Stack Software Developer<br />
-        <a href="https://solomonelijah.online" style="color: #2563eb; text-decoration: none;">solomonelijah.online</a>
+        <a href="${siteUrl}" style="color: #2563eb; text-decoration: none;">${siteUrl.replace(/^https?:\/\//, '')}</a>
       </p>
     </div>
   `
@@ -201,7 +201,7 @@ ${escapeHtml(message)}
       </div>
 
       <p style="margin-top: 24px; font-size: 12px; color: #94a3b8; text-align: center;">
-        Delivered automatically from your portfolio at <a href="https://solomonelijah.online" style="color: #64748b;">solomonelijah.online</a>
+        Delivered automatically from your portfolio at <a href="${siteUrl}" style="color: #64748b;">${siteUrl.replace(/^https?:\/\//, '')}</a>
       </p>
     </div>
   `
