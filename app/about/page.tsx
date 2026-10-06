@@ -6,9 +6,9 @@ import Arrow from '@/components/Arrow'
 import ContactBanner from '@/components/ContactBanner'
 const faqs = [
   {
-    question: 'Who is Solomon Elijah and what does he specialize in?',
+    question: 'Who is Solomon Elijah (Sunday) and what does he specialize in?',
     answer:
-      'Solomon Elijah is a full-stack software developer based in Lagos, Nigeria. He specializes in designing and building high-performance web applications, cross-platform mobile apps (React Native & Flutter), and scalable backend REST APIs using Next.js, React, Laravel, Node.js, and PostgreSQL.',
+      'Solomon Elijah Sunday (also known professionally as Solomon Elijah or Solomon Sunday Elijah) is a full-stack software developer based in Lagos, Nigeria. He specializes in designing and building high-performance web applications, cross-platform mobile apps (React Native & Flutter), and scalable backend REST APIs using Next.js, React, Laravel, Node.js, and PostgreSQL.',
   },
   {
     question: 'What core technologies and frameworks does Solomon Elijah use?',
@@ -34,7 +34,7 @@ const faqs = [
 
 export const metadata = pageMetadata(
   'About',
-  'Meet Solomon Elijah, a full-stack software developer in Lagos, Nigeria. Explore his approach to web applications, backend APIs, and mobile app development (React Native & Flutter).',
+  'Meet Solomon Elijah Sunday, a full-stack software developer in Lagos, Nigeria. Explore his approach to web applications, backend APIs, and mobile app development (React Native & Flutter).',
   '/about',
 )
 export default function AboutPage() {
@@ -79,9 +79,10 @@ export default function AboutPage() {
           </header>
           <div className="about-copy">
             <p>
-              I’m Solomon Elijah, a full-stack software developer based in
-              Lagos, Nigeria. I build web and mobile applications, connecting
-              the interfaces people use with the services, APIs, and data behind them.
+              I’m Solomon Elijah Sunday (known professionally as Solomon Elijah),
+              a full-stack software developer based in Lagos, Nigeria. I build web
+              and mobile applications, connecting the interfaces people use with the
+              services, APIs, and data behind them.
             </p>
             <p>
               My portfolio includes vehicle marketplaces, shopping experiences,
@@ -97,6 +98,10 @@ export default function AboutPage() {
             </p>
           </div>
           <dl className="profile-facts">
+            <div>
+              <dt>Full name</dt>
+              <dd>Solomon Elijah Sunday</dd>
+            </div>
             <div>
               <dt>Based in</dt>
               <dd>{developer.location}</dd>

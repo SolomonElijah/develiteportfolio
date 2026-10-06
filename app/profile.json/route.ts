@@ -10,6 +10,8 @@ export async function GET() {
     '@context': 'https://schema.org',
     '@type': 'Person',
     name: developer.name,
+    fullName: developer.fullName,
+    alternateNames: developer.alternateNames,
     jobTitle: developer.role,
     location: developer.location,
     url: siteUrl,

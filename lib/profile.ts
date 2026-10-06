@@ -1,5 +1,11 @@
 export const developer = {
   name: 'Solomon Elijah',
+  fullName: 'Solomon Elijah Sunday',
+  alternateNames: [
+    'Solomon Elijah Sunday',
+    'Solomon Sunday Elijah',
+    'Elijah Sunday',
+  ],
   role: 'Full-Stack Software Developer',
   email: 'solomonelijahsunday1@gmail.com',
   phone: '+2349032236191',

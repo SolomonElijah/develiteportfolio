@@ -11,7 +11,9 @@ export async function GET() {
 > ${developer.role} based in ${developer.location}. Complete unabridged documentation of engineering philosophy, technical architecture, project case studies, and published research.
 
 ## Developer Biography & Contact Information
-- Full Name: ${developer.name}
+- Full Name: ${developer.fullName}
+- Professional / Preferred Name: ${developer.name}
+- Alternate Names: ${developer.alternateNames.join(', ')}
 - Current Title: ${developer.role}
 - Geographic Base: ${developer.location}
 - Professional Availability: Available for full-time engineering positions, technical contract engagements, and remote software engineering roles worldwide.

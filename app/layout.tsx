@@ -14,16 +14,22 @@ const inter = Inter({
 export const metadata: Metadata = {
   metadataBase: new URL(siteUrl),
   title: {
-    default: 'Solomon Elijah | Full-Stack Software Developer',
+    default: 'Solomon Elijah (Sunday) | Full-Stack Software Developer',
     template: '%s | Solomon Elijah',
   },
   description:
     'Full-stack software developer based in Lagos, Nigeria, building reliable web applications, mobile apps (React Native & Flutter), and scalable backend APIs with Next.js, Laravel, Node.js, and PostgreSQL.',
-  authors: [{ name: developer.name, url: siteUrl }],
-  creator: developer.name,
-  publisher: developer.name,
+  authors: [
+    { name: developer.fullName, url: siteUrl },
+    { name: developer.name, url: siteUrl },
+  ],
+  creator: developer.fullName,
+  publisher: developer.fullName,
   keywords: [
     'Solomon Elijah',
+    'Solomon Elijah Sunday',
+    'Solomon Sunday Elijah',
+    'Elijah Sunday',
     'Full-Stack Developer',
     'Backend Developer',
     'Software Engineer',

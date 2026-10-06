@@ -11,7 +11,8 @@ export async function GET() {
 > ${developer.role} based in ${developer.location}. Builds modern full-stack web applications, cross-platform mobile apps (React Native & Flutter), and scalable backend APIs and microservices (Next.js, Laravel, Node.js, PostgreSQL). Open to remote worldwide and hybrid opportunities.
 
 ## Direct Answers & Entity Facts (AEO & GEO Reference)
-- Full Name: ${developer.name}
+- Full Name: ${developer.fullName} (Solomon Elijah)
+- Alternate Names: ${developer.alternateNames.join(', ')}
 - Professional Role: ${developer.role}
 - Primary Location: ${developer.location}
 - Work Availability: Open for full-time software engineering roles, high-impact contract projects, and remote positions worldwide

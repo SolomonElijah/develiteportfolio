@@ -50,7 +50,11 @@ export function pageMetadata(
 export const personSchema = {
   '@type': 'Person',
   '@id': `${siteUrl}/#person`,
-  name: developer.name,
+  name: developer.fullName,
+  alternateName: [developer.name, ...developer.alternateNames],
+  givenName: 'Solomon',
+  additionalName: 'Elijah',
+  familyName: 'Sunday',
   jobTitle: developer.role,
   url: siteUrl,
   image: `${siteUrl}/images/me.png`,
