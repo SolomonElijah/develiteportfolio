@@ -1,4 +1,4 @@
-import { NextRequest, NextResponse } from 'next/server'
+import { after, NextRequest, NextResponse } from 'next/server'
 import { createServiceClient } from '@/lib/supabase/service'
 import { email, text } from '@/lib/validation'
 import { allowRequest, readJson, sameOrigin } from '@/lib/http'
@@ -74,17 +74,16 @@ export async function POST(request: NextRequest) {
     })
     if (error) throw new Error('Contact save failed')
 
-    // Dispatch email notification to Solomon's inbox without failing the DB save
-    try {
-      await sendNewContactNotification({
-        name: payload.name,
-        email: payload.email,
-        subject: payload.subject,
-        message: payload.message,
-      })
-    } catch (emailErr) {
-      console.error('Email alert delivery failed:', emailErr)
-    }
+    // Keep the notification alive after responding, without delaying the saved message.
+    after(async () => {
+      try {
+        const result = await sendNewContactNotification(payload)
+        if (result.failed.length || result.uncertain.length)
+          console.error('Email alert delivery was not confirmed.')
+      } catch (emailErr) {
+        console.error('Email alert delivery failed:', emailErr)
+      }
+    })
 
     return NextResponse.json({ success: true }, { status: 201 })
   } catch {

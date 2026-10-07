@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, useTransition } from 'react'
+import { useState, useTransition, useId } from 'react'
 import { useRouter } from 'next/navigation'
 import Link from 'next/link'
 import {
@@ -70,6 +70,8 @@ export default function ProjectForm({
   initialData,
   isEditing = false,
 }: ProjectFormProps) {
+  const fieldPrefix = useId()
+
   const router = useRouter()
   const [isPending, startTransition] = useTransition()
   const [submitting, setSubmitting] = useState(false)
@@ -86,16 +88,14 @@ export default function ProjectForm({
   const [featured, setFeatured] = useState<boolean>(
     initialData?.featured || false,
   )
-  const [description, setDescription] = useState(
-    initialData?.description || '',
-  )
+  const [description, setDescription] = useState(initialData?.description || '')
   const [problem, setProblem] = useState(initialData?.problem || '')
   const [solution, setSolution] = useState(initialData?.solution || '')
 
   // Architecture Layer Builder State
-  const [architectureItems, setArchitectureItems] = useState<ArchitectureItem[]>(
-    () => parseArchitecture(initialData?.architecture),
-  )
+  const [architectureItems, setArchitectureItems] = useState<
+    ArchitectureItem[]
+  >(() => parseArchitecture(initialData?.architecture))
   const [archMode, setArchMode] = useState<'builder' | 'raw'>('builder')
   const [layerInput, setLayerInput] = useState('Frontend')
   const [detailInput, setDetailInput] = useState('')
@@ -257,7 +257,11 @@ export default function ProjectForm({
       archMode === 'raw'
         ? rawArchitecture.trim()
         : architectureItems
-            .map((i) => (i.layer ? `${i.layer.trim()}: ${i.detail.trim()}` : i.detail.trim()))
+            .map((i) =>
+              i.layer
+                ? `${i.layer.trim()}: ${i.detail.trim()}`
+                : i.detail.trim(),
+            )
             .join('\n')
 
     formData.set('architecture', finalArchitecture)
@@ -319,10 +323,14 @@ export default function ProjectForm({
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
           {/* Title */}
           <div className="space-y-1.5 md:col-span-2">
-            <label className="block text-sm font-medium text-slate-200">
+            <label
+              htmlFor={`${fieldPrefix}-field-0`}
+              className="block text-sm font-medium text-slate-200"
+            >
               Project Title <span className="text-rose-400">*</span>
             </label>
             <input
+              id={`${fieldPrefix}-field-0`}
               type="text"
               value={title}
               onChange={handleTitleChange}
@@ -335,7 +343,10 @@ export default function ProjectForm({
           {/* Slug */}
           <div className="space-y-1.5">
             <div className="flex items-center justify-between">
-              <label className="text-sm font-medium text-slate-200">
+              <label
+                htmlFor={`${fieldPrefix}-field-1`}
+                className="text-sm font-medium text-slate-200"
+              >
                 URL Slug <span className="text-rose-400">*</span>
               </label>
               {!isSlugManual && (
@@ -347,6 +358,7 @@ export default function ProjectForm({
                 /projects/
               </span>
               <input
+                id={`${fieldPrefix}-field-1`}
                 type="text"
                 value={slug}
                 onChange={(e) => {
@@ -362,13 +374,21 @@ export default function ProjectForm({
 
           {/* Project Type */}
           <div className="space-y-1.5">
-            <label className="block text-sm font-medium text-slate-200">
+            <p className="block text-sm font-medium text-slate-200">
               Platform Type
-            </label>
-            <div className="grid grid-cols-3 gap-2">
+            </p>
+            <div
+              role="group"
+              aria-label="Platform Type"
+              className="grid grid-cols-3 gap-2"
+            >
               {[
                 { id: 'Web', label: 'Web App', icon: GlobeAltIcon },
-                { id: 'Mobile', label: 'Mobile App', icon: DevicePhoneMobileIcon },
+                {
+                  id: 'Mobile',
+                  label: 'Mobile App',
+                  icon: DevicePhoneMobileIcon,
+                },
                 { id: 'API', label: 'API / Backend', icon: ServerStackIcon },
               ].map((item) => {
                 const Icon = item.icon
@@ -377,6 +397,7 @@ export default function ProjectForm({
                   <button
                     key={item.id}
                     type="button"
+                    aria-pressed={isSelected}
                     onClick={() => setType(item.id as any)}
                     className={`flex items-center justify-center gap-1.5 py-2.5 px-3 rounded-xl text-xs font-medium border transition-all ${
                       isSelected
@@ -394,10 +415,14 @@ export default function ProjectForm({
 
           {/* Demo URL */}
           <div className="space-y-1.5">
-            <label className="block text-sm font-medium text-slate-200">
+            <label
+              htmlFor={`${fieldPrefix}-field-3`}
+              className="block text-sm font-medium text-slate-200"
+            >
               Live Demo / External Link
             </label>
             <input
+              id={`${fieldPrefix}-field-3`}
               type="url"
               value={demoUrl}
               onChange={(e) => setDemoUrl(e.target.value)}
@@ -408,8 +433,13 @@ export default function ProjectForm({
 
           {/* Featured Project Switch */}
           <div className="space-y-1.5 flex flex-col justify-end">
-            <label className="flex items-center gap-3 p-3 rounded-xl border border-slate-700/80 bg-slate-950/60 cursor-pointer hover:border-slate-600 transition-all">
+            <label
+              aria-label="Feature on Homepage"
+              htmlFor={`${fieldPrefix}-field-4`}
+              className="flex items-center gap-3 p-3 rounded-xl border border-slate-700/80 bg-slate-950/60 cursor-pointer hover:border-slate-600 transition-all"
+            >
               <input
+                id={`${fieldPrefix}-field-4`}
                 type="checkbox"
                 checked={featured}
                 onChange={(e) => setFeatured(e.target.checked)}
@@ -439,7 +469,8 @@ export default function ProjectForm({
             Media & Visual Showcase
           </h2>
           <p className="text-xs text-slate-400 mt-0.5">
-            Upload high-resolution screenshots or paste direct cloud storage URLs.
+            Upload high-resolution screenshots or paste direct cloud storage
+            URLs.
           </p>
         </div>
 
@@ -467,7 +498,10 @@ export default function ProjectForm({
           {/* Brief Description */}
           <div className="space-y-1.5">
             <div className="flex items-center justify-between">
-              <label className="block text-sm font-medium text-slate-200">
+              <label
+                htmlFor={`${fieldPrefix}-field-5`}
+                className="block text-sm font-medium text-slate-200"
+              >
                 Short Summary <span className="text-rose-400">*</span>
               </label>
               <span className="text-xs text-slate-500">
@@ -475,6 +509,7 @@ export default function ProjectForm({
               </span>
             </div>
             <textarea
+              id={`${fieldPrefix}-field-5`}
               rows={3}
               value={description}
               onChange={(e) => setDescription(e.target.value)}
@@ -487,10 +522,14 @@ export default function ProjectForm({
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             {/* The Problem */}
             <div className="space-y-1.5">
-              <label className="block text-sm font-medium text-slate-200">
+              <label
+                htmlFor={`${fieldPrefix}-field-6`}
+                className="block text-sm font-medium text-slate-200"
+              >
                 The Problem / Challenge
               </label>
               <textarea
+                id={`${fieldPrefix}-field-6`}
                 rows={5}
                 value={problem}
                 onChange={(e) => setProblem(e.target.value)}
@@ -501,10 +540,14 @@ export default function ProjectForm({
 
             {/* The Solution */}
             <div className="space-y-1.5">
-              <label className="block text-sm font-medium text-slate-200">
+              <label
+                htmlFor={`${fieldPrefix}-field-7`}
+                className="block text-sm font-medium text-slate-200"
+              >
                 The Solution / Approach
               </label>
               <textarea
+                id={`${fieldPrefix}-field-7`}
                 rows={5}
                 value={solution}
                 onChange={(e) => setSolution(e.target.value)}
@@ -518,12 +561,14 @@ export default function ProjectForm({
           <div className="space-y-4 pt-4 border-t border-slate-800/80">
             <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
               <div>
-                <label className="block text-sm font-semibold text-slate-100 flex items-center gap-2">
+                <p className="block text-sm font-semibold text-slate-100 flex items-center gap-2">
                   <span className="w-2 h-2 rounded-full bg-cyan-400" />
-                  Architecture & Technical Implementation ({architectureItems.length} layers)
-                </label>
+                  Architecture & Technical Implementation (
+                  {architectureItems.length} layers)
+                </p>
                 <p className="text-xs text-slate-400 mt-0.5">
-                  Define technical implementation layers one by one (e.g. Frontend, Backend, Storage, Caching, Auth).
+                  Define technical implementation layers one by one (e.g.
+                  Frontend, Backend, Storage, Caching, Auth).
                 </p>
               </div>
 
@@ -544,7 +589,9 @@ export default function ProjectForm({
                       // Sync to raw text
                       setRawArchitecture(
                         architectureItems
-                          .map((i) => (i.layer ? `${i.layer}: ${i.detail}` : i.detail))
+                          .map((i) =>
+                            i.layer ? `${i.layer}: ${i.detail}` : i.detail,
+                          )
                           .join('\n'),
                       )
                       setArchMode('raw')
@@ -576,7 +623,9 @@ export default function ProjectForm({
                 {/* Layer Entry Box */}
                 <div className="p-4 rounded-xl border border-slate-700/80 bg-slate-950/70 space-y-3">
                   <div className="space-y-1.5">
-                    <span className="text-xs text-slate-400">Quick Layer Presets:</span>
+                    <span className="text-xs text-slate-400">
+                      Quick Layer Presets:
+                    </span>
                     <div className="flex flex-wrap gap-1.5">
                       {PRESET_LAYERS.map((preset) => (
                         <button
@@ -597,10 +646,14 @@ export default function ProjectForm({
 
                   <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
                     <div className="space-y-1">
-                      <label className="text-xs font-medium text-slate-400">
+                      <label
+                        htmlFor={`${fieldPrefix}-field-9`}
+                        className="text-xs font-medium text-slate-400"
+                      >
                         Layer / Component
                       </label>
                       <input
+                        id={`${fieldPrefix}-field-9`}
                         type="text"
                         value={layerInput}
                         onChange={(e) => setLayerInput(e.target.value)}
@@ -610,11 +663,15 @@ export default function ProjectForm({
                     </div>
 
                     <div className="sm:col-span-2 space-y-1">
-                      <label className="text-xs font-medium text-slate-400">
+                      <label
+                        htmlFor={`${fieldPrefix}-field-10`}
+                        className="text-xs font-medium text-slate-400"
+                      >
                         Implementation Details
                       </label>
                       <div className="flex gap-2">
                         <input
+                          id={`${fieldPrefix}-field-10`}
                           type="text"
                           value={detailInput}
                           onChange={(e) => setDetailInput(e.target.value)}
@@ -699,7 +756,8 @@ export default function ProjectForm({
                   </div>
                 ) : (
                   <div className="py-6 text-center border border-dashed border-slate-800 rounded-xl text-xs text-slate-500">
-                    No architecture layers added yet. Use the presets above or load a template.
+                    No architecture layers added yet. Use the presets above or
+                    load a template.
                   </div>
                 )}
               </div>
@@ -707,6 +765,7 @@ export default function ProjectForm({
               <div className="space-y-2">
                 <textarea
                   rows={6}
+                  aria-label="Architecture as text"
                   value={rawArchitecture}
                   onChange={(e) => {
                     setRawArchitecture(e.target.value)
@@ -716,7 +775,8 @@ export default function ProjectForm({
                   className="w-full px-4 py-3 rounded-xl border border-slate-700 bg-slate-950 text-slate-200 placeholder-slate-500 focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500 transition-all font-mono text-xs leading-relaxed"
                 />
                 <p className="text-xs text-slate-500">
-                  Enter one layer per line in "Layer: Description" format.
+                  Enter one layer per line in &quot;Layer: Description&quot;
+                  format.
                 </p>
               </div>
             )}
@@ -738,11 +798,15 @@ export default function ProjectForm({
 
         {/* Tech Stack */}
         <div className="space-y-3">
-          <label className="block text-sm font-medium text-slate-200">
+          <label
+            htmlFor={`${fieldPrefix}-field-11`}
+            className="block text-sm font-medium text-slate-200"
+          >
             Tech Stack Tags ({stack.length})
           </label>
           <div className="flex gap-2">
             <input
+              id={`${fieldPrefix}-field-11`}
               type="text"
               value={stackInput}
               onChange={(e) => setStackInput(e.target.value)}
@@ -814,11 +878,15 @@ export default function ProjectForm({
 
         {/* Features */}
         <div className="space-y-3 pt-4 border-t border-slate-800/80">
-          <label className="block text-sm font-medium text-slate-200">
+          <label
+            htmlFor={`${fieldPrefix}-field-12`}
+            className="block text-sm font-medium text-slate-200"
+          >
             Key Features ({features.length})
           </label>
           <div className="flex gap-2">
             <input
+              id={`${fieldPrefix}-field-12`}
               type="text"
               value={featureInput}
               onChange={(e) => setFeatureInput(e.target.value)}

@@ -12,10 +12,11 @@ import { createAdminClient } from '@/lib/supabase/server'
 
 export default async function BlogPage() {
   const supabase = await createAdminClient()
-  const { data: posts } = await supabase
+  const { data: posts, error } = await supabase
     .from('blog_posts')
     .select('*')
     .order('created_at', { ascending: false })
+  if (error) throw new Error('Could not load articles. Please try again.')
 
   const totalCount = posts?.length || 0
   const publishedCount = posts?.filter((p) => p.published).length || 0
@@ -37,7 +38,8 @@ export default async function BlogPage() {
             </span>
           </div>
           <p className="text-xs text-slate-400 mt-1">
-            Write, publish, and manage engineering articles and technical insights.
+            Write, publish, and manage engineering articles and technical
+            insights.
           </p>
         </div>
 
@@ -117,9 +119,7 @@ export default async function BlogPage() {
                         >
                           <span
                             className={`inline-block h-4 w-4 transform rounded-full bg-white transition-transform shadow-sm ${
-                              post.published
-                                ? 'translate-x-6'
-                                : 'translate-x-1'
+                              post.published ? 'translate-x-6' : 'translate-x-1'
                             }`}
                           />
                         </button>

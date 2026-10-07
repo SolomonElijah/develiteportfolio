@@ -3,9 +3,9 @@ import nodemailer from 'nodemailer'
 import { Resend } from 'resend'
 import { escapeHtml } from './validation'
 import { developer, siteUrl } from './profile'
+import { deliverEmail } from './email-delivery'
 
 interface MailOptions {
-  from?: string
   to: string | string[]
   replyTo?: string
   subject: string
@@ -17,22 +17,22 @@ interface MailOptions {
  * Supports Resend SMTP (smtp.resend.com), Gmail, Zoho, cPanel, or any standard SMTP server.
  */
 function getMailTransporter() {
-  const host =
-    process.env.SMTP_HOST ||
-    (process.env.RESEND_API_KEY ? 'smtp.resend.com' : undefined)
+  const host = process.env.SMTP_HOST
   const port = Number(
     process.env.SMTP_PORT || (host === 'smtp.resend.com' ? 465 : 587),
   )
   const user =
-    process.env.SMTP_USER ||
-    (host === 'smtp.resend.com' ? 'resend' : undefined)
+    process.env.SMTP_USER || (host === 'smtp.resend.com' ? 'resend' : undefined)
   const pass =
     process.env.SMTP_PASSWORD ||
     process.env.SMTP_PASS ||
-    process.env.RESEND_API_KEY
+    (host === 'smtp.resend.com' ? process.env.RESEND_API_KEY : undefined)
 
   if (!host || !pass) {
     return null
+  }
+  if (!Number.isInteger(port) || port < 1 || port > 65535 || !user) {
+    throw new Error('Invalid SMTP host, port, or username configuration.')
   }
 
   // Use SSL for port 465 / 2465, STARTTLS for 587 / 2587
@@ -45,6 +45,9 @@ function getMailTransporter() {
     host,
     port,
     secure,
+    connectionTimeout: 10000,
+    greetingTimeout: 10000,
+    socketTimeout: 15000,
     auth: user
       ? {
           user,
@@ -68,46 +71,63 @@ function getFromAddress() {
  */
 async function dispatchEmail({ to, replyTo, subject, html }: MailOptions) {
   const transporter = getMailTransporter()
-
+  const recipients = Array.from(new Set(Array.isArray(to) ? to : [to]))
+  const resend =
+    process.env.RESEND_API_KEY && process.env.RESEND_FROM_EMAIL
+      ? new Resend(process.env.RESEND_API_KEY)
+      : null
+  if (!transporter && !resend) {
+    throw new Error(
+      'Email service is not configured. Specify SMTP settings or Resend API settings.',
+    )
+  }
+  let preSendError: Error | null = null
   if (transporter) {
-    const from = getFromAddress()
-    const recipients = Array.isArray(to) ? to : [to]
-
-    // Send individually so recipient addresses stay private
-    const results = await Promise.all(
-      recipients.map((recipient) =>
-        transporter.sendMail({
-          from,
-          to: recipient,
-          replyTo,
-          subject,
-          html,
-        }),
-      ),
-    )
-
-    return results
+    try {
+      await transporter.verify()
+    } catch {
+      preSendError = Object.assign(
+        new Error('SMTP connection or authentication failed.'),
+        { code: 'EPRESEND' },
+      )
+    }
   }
-
-  // Fallback to Resend REST API if SMTP credentials are not present but RESEND_API_KEY is
-  if (process.env.RESEND_API_KEY && process.env.RESEND_FROM_EMAIL) {
-    const resend = new Resend(process.env.RESEND_API_KEY)
-    const recipients = Array.isArray(to) ? to : [to]
-    const { data, error } = await resend.batch.send(
-      recipients.map((recipient) => ({
-        from: `Solomon Elijah <${process.env.RESEND_FROM_EMAIL}>`,
-        to: [recipient],
-        replyTo,
-        subject,
-        html,
-      })),
-    )
-    if (error) throw new Error('Failed to send email via Resend.')
-    return data
-  }
-
-  throw new Error(
-    'Email service is not configured. Please specify SMTP settings (SMTP_HOST, SMTP_PORT, SMTP_USER, SMTP_PASSWORD) in .env',
+  return deliverEmail(
+    recipients,
+    transporter
+      ? (recipient) => {
+          if (preSendError) return Promise.reject(preSendError)
+          return transporter.sendMail({
+            from: getFromAddress(),
+            to: recipient,
+            replyTo,
+            subject,
+            html,
+          })
+        }
+      : null,
+    resend
+      ? async (pending) => {
+          const { error } = await resend.batch.send(
+            pending.map((recipient) => ({
+              from: `Solomon Elijah <${process.env.RESEND_FROM_EMAIL}>`,
+              to: [recipient],
+              replyTo,
+              subject,
+              html,
+            })),
+            { idempotencyKey: crypto.randomUUID() },
+          )
+          if (error)
+            throw Object.assign(new Error('Resend email delivery failed.'), {
+              code: [400, 401, 403, 404, 405, 422, 429].includes(
+                error.statusCode || 0,
+              )
+                ? 'EMESSAGE'
+                : 'EUNKNOWN',
+            })
+        }
+      : null,
   )
 }
 
@@ -160,8 +180,7 @@ export async function sendNewContactNotification({
   subject: string
   message: string
 }) {
-  const recipient =
-    process.env.ADMIN_NOTIFICATION_EMAIL || developer.email
+  const recipient = process.env.ADMIN_NOTIFICATION_EMAIL || developer.email
 
   const html = `
     <div style="font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif; max-width: 600px; margin: 0 auto; padding: 24px; border: 1px solid #e2e8f0; border-radius: 12px; background-color: #ffffff; color: #0f172a;">
@@ -213,4 +232,3 @@ ${escapeHtml(message)}
     html,
   })
 }
-

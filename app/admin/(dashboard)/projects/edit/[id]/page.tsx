@@ -10,11 +10,14 @@ interface Props {
 
 export default async function EditProjectPage({ params }: Props) {
   const supabase = await createAdminClient()
-  const { data: project } = await supabase
+  const { data: project, error } = await supabase
     .from('projects')
     .select('*')
     .eq('id', (await params).id)
     .single()
+
+  if (error && error.code !== 'PGRST116')
+    throw new Error('Could not load this record. Please try again.')
 
   if (!project) {
     notFound()

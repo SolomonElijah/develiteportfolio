@@ -10,6 +10,8 @@ function refresh() {
   revalidatePath('/blog', 'layout')
   revalidatePath('/sitemap.xml')
   revalidatePath('/llms.txt')
+  revalidatePath('/llms-full.txt')
+  revalidatePath('/profile.json')
 }
 export async function createBlogPost(form: FormData) {
   const db = await createAdminClient()

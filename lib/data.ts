@@ -109,8 +109,7 @@ export const getFeaturedProjects = async (): Promise<Project[]> => {
 export const getProjectBySlug = async (
   slug: string,
 ): Promise<Project | null> => {
-  if (!/^[a-z0-9]+(?:-[a-z0-9]+)*$/.test(slug) || slug.length > 200)
-    return null
+  if (!/^[a-z0-9]+(?:-[a-z0-9]+)*$/.test(slug) || slug.length > 200) return null
   const projects = await getProjects()
   return projects.find((project) => project.slug === slug) || null
 }
@@ -141,8 +140,7 @@ const fetchBlogPostsFromDb = async (): Promise<BlogPost[]> => {
       .eq('published', true)
       .order('created_at', { ascending: false })
     if (error) throw new Error('Article query failed')
-    const list = data && data.length > 0 ? data : (blogSnapshot as BlogPost[])
-    return list.map(normalizePost)
+    return (data || []).map(normalizePost)
   } catch {
     console.warn(
       'Published article database source unavailable; serving blog snapshot.',
@@ -160,8 +158,7 @@ export const getBlogPosts = unstable_cache(
 export const getBlogPostBySlug = async (
   slug: string,
 ): Promise<BlogPost | null> => {
-  if (!/^[a-z0-9]+(?:-[a-z0-9]+)*$/.test(slug) || slug.length > 200)
-    return null
+  if (!/^[a-z0-9]+(?:-[a-z0-9]+)*$/.test(slug) || slug.length > 200) return null
   const posts = await getBlogPosts()
   return posts.find((post) => post.slug === slug) || null
 }

@@ -8,11 +8,12 @@ export function cn(...inputs: ClassValue[]) {
 export function generateSlug(text: string): string {
   return text
     .toLowerCase()
-    .replace(/[^\w\s-]/g, '')
+    .replace(/_/g, '-')
+    .replace(/[^a-z0-9\s-]/g, '')
     .replace(/\s+/g, '-')
     .replace(/--+/g, '-')
-    .replace(/^-+|-+$/g, '')
     .slice(0, 180)
+    .replace(/^-+|-+$/g, '')
 }
 
 export interface ArchitectureItem {
@@ -45,11 +46,18 @@ export function parseArchitecture(raw?: string): ArchitectureItem[] {
 
   // Handle single-line concatenated strings like:
   // "Frontend: Component-based UI ... Backend: REST API ... Storage: Cloud ..."
-  const regex = /([A-Za-z0-9/_\s-]+):\s*([^:]+?)(?=(?:\s+[A-Za-z0-9/_\s-]+:|$))/g
+  // Newlines support arbitrary layer names. In legacy concatenated text, only
+  // known labels are unambiguous; do not consume words from preceding details.
+  const regex =
+    /(?:^|\s+)(Frontend|Backend|Database|Storage|Caching|Auth\/Admin|Auth|API & Integrations|DevOps \/ Cloud|Security):\s*/gi
   const matches: ArchitectureItem[] = []
   let m: RegExpExecArray | null
   while ((m = regex.exec(text)) !== null) {
-    matches.push({ layer: m[1].trim(), detail: m[2].trim() })
+    const start = regex.lastIndex
+    const next = regex.exec(text)
+    const end = next ? next.index : text.length
+    matches.push({ layer: m[1].trim(), detail: text.slice(start, end).trim() })
+    regex.lastIndex = end
   }
   if (matches.length > 0) return matches
 

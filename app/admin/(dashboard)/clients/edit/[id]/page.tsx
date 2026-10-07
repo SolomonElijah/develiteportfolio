@@ -10,11 +10,14 @@ interface Props {
 
 export default async function EditClientPage({ params }: Props) {
   const supabase = await createAdminClient()
-  const { data: client } = await supabase
+  const { data: client, error } = await supabase
     .from('clients')
     .select('*')
     .eq('id', (await params).id)
     .single()
+
+  if (error && error.code !== 'PGRST116')
+    throw new Error('Could not load this record. Please try again.')
 
   if (!client) {
     notFound()

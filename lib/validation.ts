@@ -1,3 +1,5 @@
+import imageSources from './image-sources.json'
+
 export function text(
   value: unknown,
   label: string,
@@ -27,18 +29,43 @@ export function safeExternalUrl(value: unknown): string | undefined {
   }
   return undefined
 }
-export function safeImage(value: unknown): string {
+export function safeImageUrl(value: unknown): string | undefined {
   if (typeof value === 'string') {
     const trimmed = value.trim()
-    if (/^\/images\/[a-zA-Z0-9_./-]+$/.test(trimmed)) {
+    if (
+      /^\/images\/[a-zA-Z0-9_./-]+$/.test(trimmed) &&
+      !trimmed.split('/').some((segment) => segment === '.' || segment === '..')
+    ) {
       return trimmed
     }
     const url = safeExternalUrl(trimmed)
     if (url) {
-      return url
+      const parsed = new URL(url)
+      const sources = [...imageSources]
+      try {
+        if (process.env.NEXT_PUBLIC_SUPABASE_URL)
+          sources.push({
+            hostname: new URL(process.env.NEXT_PUBLIC_SUPABASE_URL).hostname,
+            pathname: '/storage/v1/object/public/**',
+          })
+      } catch {
+        /* Invalid configuration is not an approved image source. */
+      }
+      if (
+        !parsed.port &&
+        sources.some(
+          (source) =>
+            parsed.hostname === source.hostname &&
+            parsed.pathname.startsWith(source.pathname.slice(0, -2)),
+        )
+      )
+        return url
     }
   }
-  return '/images/project1.png'
+  return undefined
+}
+export function safeImage(value: unknown): string {
+  return safeImageUrl(value) || '/images/project1.png'
 }
 export function stringArray(value: unknown): string[] {
   return Array.isArray(value)
@@ -78,12 +105,13 @@ export function optionalUrl(
 ) {
   if (!value || typeof value !== 'string' || !value.trim()) return null
   const trimmed = value.trim()
-  if (image && /^\/images\/[a-zA-Z0-9_./-]+$/.test(trimmed)) {
-    return trimmed
-  }
-  const url = safeExternalUrl(trimmed)
+  const url = image ? safeImageUrl(trimmed) : safeExternalUrl(trimmed)
   if (!url)
-    throw new Error(`${label} must be a valid HTTPS URL.`)
+    throw new Error(
+      image
+        ? `${label} must use a local image, public Supabase storage, or images.unsplash.com over HTTPS.`
+        : `${label} must be a valid HTTPS URL.`,
+    )
   return url
 }
 export function escapeHtml(value: string) {

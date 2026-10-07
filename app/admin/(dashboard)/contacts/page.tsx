@@ -5,14 +5,14 @@ import AddContactButton from '@/components/admin/AddContactButton'
 import ImportContactsButton from '@/components/admin/ImportContactsButton'
 import SendEmailButton from '@/components/admin/SendEmailButton'
 import BulkEmailButton from '@/components/admin/BulkEmailButton'
-import { EnvelopeIcon } from '@heroicons/react/24/outline'
 
 export default async function ContactsPage() {
   const supabase = await createAdminClient()
-  const { data: contacts } = await supabase
+  const { data: contacts, error } = await supabase
     .from('contacts')
     .select('*')
     .order('created_at', { ascending: false })
+  if (error) throw new Error('Could not load contacts. Please try again.')
 
   const totalContacts = contacts?.length || 0
   const pendingCount =

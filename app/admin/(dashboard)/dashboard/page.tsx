@@ -19,10 +19,10 @@ export default async function DashboardPage() {
   const supabase = await createAdminClient()
 
   const [
-    { data: allProjects },
-    { count: totalBlogPosts },
-    { data: recentContacts, count: totalContacts },
-    { data: clients },
+    { data: allProjects, error: projectsError },
+    { count: totalBlogPosts, error: blogError },
+    { data: recentContacts, count: totalContacts, error: contactsError },
+    { data: clients, error: clientsError },
   ] = await Promise.all([
     supabase
       .from('projects')
@@ -31,11 +31,15 @@ export default async function DashboardPage() {
     supabase.from('blog_posts').select('id', { count: 'exact', head: true }),
     supabase
       .from('contacts')
-      .select('id, name, email, message, status, created_at', { count: 'exact' })
+      .select('id, name, email, message, status, created_at', {
+        count: 'exact',
+      })
       .order('created_at', { ascending: false })
       .limit(4),
     supabase.from('clients').select('revenue, expenditure'),
   ])
+  if (projectsError || blogError || contactsError || clientsError)
+    throw new Error('Could not load dashboard data. Please try again.')
 
   const totalProjects = allProjects?.length || 0
   const featuredProjects = allProjects?.filter((p) => p.featured).length || 0
@@ -98,7 +102,8 @@ export default async function DashboardPage() {
               Welcome back, Admin
             </h1>
             <p className="text-sm text-slate-400 max-w-xl">
-              Manage your showcase projects, technical articles, client inquiries, and revenue tracking in one place.
+              Manage your showcase projects, technical articles, client
+              inquiries, and revenue tracking in one place.
             </p>
           </div>
 

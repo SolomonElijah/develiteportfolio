@@ -8,7 +8,7 @@
     "start": "next start",
     "lint": "eslint . --max-warnings=0",
     "typecheck": "tsc --noEmit",
-    "test": "tsx --test tests/security.test.ts",
+    "test": "tsx --test tests/security.test.ts tests/regressions.test.ts",
     "test:browser": "playwright test",
     "format": "prettier --write app components lib tests *.ts *.js *.mjs"
   },

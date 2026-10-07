@@ -35,8 +35,12 @@ export async function POST(request: NextRequest) {
     )
   }
   try {
-    await sendContactReply({ to: recipients, subject, message })
-    return NextResponse.json({ success: true })
+    const result = await sendContactReply({ to: recipients, subject, message })
+    const success = !result.failed.length && !result.uncertain.length
+    return NextResponse.json(
+      { success, ...result },
+      { status: success ? 200 : 207 },
+    )
   } catch (error: any) {
     console.error('Email reply error:', error)
     return NextResponse.json(

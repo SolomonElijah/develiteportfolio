@@ -11,6 +11,7 @@ function refresh() {
   revalidatePath('/')
   revalidatePath('/sitemap.xml')
   revalidatePath('/llms.txt')
+  revalidatePath('/llms-full.txt')
   revalidatePath('/profile.json')
 }
 export async function createProject(form: FormData) {

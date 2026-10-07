@@ -10,11 +10,14 @@ interface Props {
 
 export default async function EditBlogPostPage({ params }: Props) {
   const supabase = await createAdminClient()
-  const { data: post } = await supabase
+  const { data: post, error } = await supabase
     .from('blog_posts')
     .select('*')
     .eq('id', (await params).id)
     .single()
+
+  if (error && error.code !== 'PGRST116')
+    throw new Error('Could not load this record. Please try again.')
 
   if (!post) {
     notFound()

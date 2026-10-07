@@ -1,14 +1,15 @@
 import Link from 'next/link'
-import { PlusIcon, PencilIcon, UserGroupIcon, CurrencyDollarIcon } from '@heroicons/react/24/outline'
+import { PlusIcon, PencilIcon } from '@heroicons/react/24/outline'
 import DeleteButton from '@/components/admin/DeleteButton'
 import { createAdminClient } from '@/lib/supabase/server'
 
 export default async function ClientsPage() {
   const supabase = await createAdminClient()
-  const { data: clients } = await supabase
+  const { data: clients, error } = await supabase
     .from('clients')
     .select('*')
     .order('created_at', { ascending: false })
+  if (error) throw new Error('Could not load clients. Please try again.')
 
   const totalRevenue =
     clients?.reduce((sum, c) => sum + (c.revenue || 0), 0) || 0
@@ -30,7 +31,8 @@ export default async function ClientsPage() {
             </span>
           </div>
           <p className="text-xs text-slate-400 mt-1">
-            Track customer contracts, revenues, development expenditures, and project status.
+            Track customer contracts, revenues, development expenditures, and
+            project status.
           </p>
         </div>
 
@@ -90,7 +92,8 @@ export default async function ClientsPage() {
             <tbody className="divide-y divide-slate-800/60 text-sm">
               {clients && clients.length > 0 ? (
                 clients.map((client) => {
-                  const profit = (client.revenue || 0) - (client.expenditure || 0)
+                  const profit =
+                    (client.revenue || 0) - (client.expenditure || 0)
 
                   return (
                     <tr

@@ -15,10 +15,11 @@ import { createAdminClient } from '@/lib/supabase/server'
 
 export default async function ProjectsPage() {
   const supabase = await createAdminClient()
-  const { data: projects } = await supabase
+  const { data: projects, error } = await supabase
     .from('projects')
     .select('*')
     .order('created_at', { ascending: false })
+  if (error) throw new Error('Could not load projects. Please try again.')
 
   const typeConfig: Record<
     string,
@@ -62,7 +63,8 @@ export default async function ProjectsPage() {
             </span>
           </div>
           <p className="text-xs text-slate-400 mt-1">
-            Manage your project portfolio, case studies, screenshots, and featured highlights.
+            Manage your project portfolio, case studies, screenshots, and
+            featured highlights.
           </p>
         </div>
 

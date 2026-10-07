@@ -1,24 +1,21 @@
+const imageSources = [...require('./lib/image-sources.json')]
+if (process.env.NEXT_PUBLIC_SUPABASE_URL) {
+  imageSources.push({
+    hostname: new URL(process.env.NEXT_PUBLIC_SUPABASE_URL).hostname,
+    pathname: '/storage/v1/object/public/**',
+  })
+}
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   poweredByHeader: false,
   images: {
     minimumCacheTTL: 2592000,
     formats: ['image/avif', 'image/webp'],
-    remotePatterns: [
-      {
-        protocol: 'https',
-        hostname: 'udkzxajwoxcppzthvzwz.supabase.co',
-        pathname: '/storage/v1/object/public/**',
-      },
-      {
-        protocol: 'https',
-        hostname: '**.supabase.co',
-      },
-      {
-        protocol: 'https',
-        hostname: '**',
-      },
-    ],
+    remotePatterns: imageSources.map((source) => ({
+      protocol: 'https',
+      port: '',
+      ...source,
+    })),
   },
   async headers() {
     return [

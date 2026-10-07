@@ -1,11 +1,13 @@
 'use client'
 
-import { useState } from 'react'
+import { useState, useId } from 'react'
 import { PlusIcon, ArrowPathIcon } from '@heroicons/react/24/outline'
 import { createContact } from '@/app/admin/(dashboard)/contacts/actions'
 import { toast } from 'sonner'
 
 export default function AddContactButton() {
+  const fieldPrefix = useId()
+
   const [showModal, setShowModal] = useState(false)
   const [loading, setLoading] = useState(false)
 
@@ -51,10 +53,14 @@ export default function AddContactButton() {
 
             <form onSubmit={handleSubmit} className="space-y-4">
               <div className="space-y-1">
-                <label className="block text-xs font-medium text-slate-300">
+                <label
+                  htmlFor={`${fieldPrefix}-field-0`}
+                  className="block text-xs font-medium text-slate-300"
+                >
                   Name *
                 </label>
                 <input
+                  id={`${fieldPrefix}-field-0`}
                   type="text"
                   name="name"
                   required
@@ -64,10 +70,14 @@ export default function AddContactButton() {
               </div>
 
               <div className="space-y-1">
-                <label className="block text-xs font-medium text-slate-300">
+                <label
+                  htmlFor={`${fieldPrefix}-field-1`}
+                  className="block text-xs font-medium text-slate-300"
+                >
                   Email *
                 </label>
                 <input
+                  id={`${fieldPrefix}-field-1`}
                   type="email"
                   name="email"
                   required
@@ -77,10 +87,14 @@ export default function AddContactButton() {
               </div>
 
               <div className="space-y-1">
-                <label className="block text-xs font-medium text-slate-300">
+                <label
+                  htmlFor={`${fieldPrefix}-field-2`}
+                  className="block text-xs font-medium text-slate-300"
+                >
                   Phone
                 </label>
                 <input
+                  id={`${fieldPrefix}-field-2`}
                   type="tel"
                   name="phone"
                   placeholder="+1 555-0199"
@@ -89,10 +103,14 @@ export default function AddContactButton() {
               </div>
 
               <div className="space-y-1">
-                <label className="block text-xs font-medium text-slate-300">
+                <label
+                  htmlFor={`${fieldPrefix}-field-3`}
+                  className="block text-xs font-medium text-slate-300"
+                >
                   Message / Details
                 </label>
                 <textarea
+                  id={`${fieldPrefix}-field-3`}
                   name="message"
                   rows={3}
                   placeholder="Project inquiry details..."
@@ -113,7 +131,9 @@ export default function AddContactButton() {
                   disabled={loading}
                   className="px-5 py-2 bg-blue-600 hover:bg-blue-500 text-white text-xs font-semibold rounded-xl transition-all shadow-md shadow-blue-500/20 disabled:opacity-50 flex items-center gap-1.5"
                 >
-                  {loading && <ArrowPathIcon className="w-3.5 h-3.5 animate-spin" />}
+                  {loading && (
+                    <ArrowPathIcon className="w-3.5 h-3.5 animate-spin" />
+                  )}
                   <span>{loading ? 'Adding...' : 'Save Contact'}</span>
                 </button>
               </div>

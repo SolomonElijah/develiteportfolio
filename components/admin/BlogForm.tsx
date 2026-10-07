@@ -1,6 +1,6 @@
 'use client'
 
-import { useState } from 'react'
+import { useState, useId } from 'react'
 import { useRouter } from 'next/navigation'
 import Link from 'next/link'
 import {
@@ -24,6 +24,8 @@ export default function BlogForm({
   initialData,
   isEditing = false,
 }: BlogFormProps) {
+  const fieldPrefix = useId()
+
   const router = useRouter()
   const [loading, setLoading] = useState(false)
   const [title, setTitle] = useState(initialData?.title || '')
@@ -96,10 +98,14 @@ export default function BlogForm({
 
         {/* Title */}
         <div className="space-y-1.5">
-          <label className="block text-sm font-medium text-slate-200">
+          <label
+            htmlFor={`${fieldPrefix}-field-0`}
+            className="block text-sm font-medium text-slate-200"
+          >
             Article Title <span className="text-rose-400">*</span>
           </label>
           <input
+            id={`${fieldPrefix}-field-0`}
             type="text"
             value={title}
             onChange={(e) => setTitle(e.target.value)}
@@ -111,10 +117,14 @@ export default function BlogForm({
 
         {/* Excerpt */}
         <div className="space-y-1.5">
-          <label className="block text-sm font-medium text-slate-200">
+          <label
+            htmlFor={`${fieldPrefix}-field-1`}
+            className="block text-sm font-medium text-slate-200"
+          >
             Excerpt / Summary
           </label>
           <textarea
+            id={`${fieldPrefix}-field-1`}
             rows={2}
             value={excerpt}
             onChange={(e) => setExcerpt(e.target.value)}
@@ -136,12 +146,16 @@ export default function BlogForm({
         {/* Content */}
         <div className="space-y-1.5">
           <div className="flex items-center justify-between">
-            <label className="block text-sm font-medium text-slate-200">
+            <label
+              htmlFor={`${fieldPrefix}-field-2`}
+              className="block text-sm font-medium text-slate-200"
+            >
               Content (Markdown) <span className="text-rose-400">*</span>
             </label>
             <span className="text-xs text-slate-500">Supports GFM & KaTeX</span>
           </div>
           <textarea
+            id={`${fieldPrefix}-field-2`}
             rows={14}
             value={content}
             onChange={(e) => setContent(e.target.value)}
@@ -153,8 +167,13 @@ export default function BlogForm({
 
         {/* Published switch */}
         <div className="pt-2">
-          <label className="flex items-center gap-3 p-3 rounded-xl border border-slate-700/80 bg-slate-950/60 cursor-pointer hover:border-slate-600 transition-all max-w-sm">
+          <label
+            aria-label="Publish article"
+            htmlFor={`${fieldPrefix}-field-3`}
+            className="flex items-center gap-3 p-3 rounded-xl border border-slate-700/80 bg-slate-950/60 cursor-pointer hover:border-slate-600 transition-all max-w-sm"
+          >
             <input
+              id={`${fieldPrefix}-field-3`}
               type="checkbox"
               checked={published}
               onChange={(e) => setPublished(e.target.checked)}

@@ -1,6 +1,6 @@
 'use client'
 
-import { useState } from 'react'
+import { useState, useId } from 'react'
 import { useRouter } from 'next/navigation'
 import {
   createClientRecord,
@@ -18,6 +18,8 @@ export default function ClientForm({
   initialData,
   isEditing = false,
 }: ClientFormProps) {
+  const fieldPrefix = useId()
+
   const router = useRouter()
   const [loading, setLoading] = useState(false)
 
@@ -58,10 +60,14 @@ export default function ClientForm({
 
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
           <div className="space-y-1.5">
-            <label className="block text-sm font-medium text-slate-200">
+            <label
+              htmlFor={`${fieldPrefix}-field-0`}
+              className="block text-sm font-medium text-slate-200"
+            >
               Customer / Company Name <span className="text-rose-400">*</span>
             </label>
             <input
+              id={`${fieldPrefix}-field-0`}
               type="text"
               name="customerName"
               defaultValue={initialData?.customer_name}
@@ -72,10 +78,14 @@ export default function ClientForm({
           </div>
 
           <div className="space-y-1.5">
-            <label className="block text-sm font-medium text-slate-200">
+            <label
+              htmlFor={`${fieldPrefix}-field-1`}
+              className="block text-sm font-medium text-slate-200"
+            >
               Contract Project Title <span className="text-rose-400">*</span>
             </label>
             <input
+              id={`${fieldPrefix}-field-1`}
               type="text"
               name="projectTitle"
               defaultValue={initialData?.project_title}
@@ -88,10 +98,14 @@ export default function ClientForm({
 
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
           <div className="space-y-1.5">
-            <label className="block text-sm font-medium text-slate-200">
+            <label
+              htmlFor={`${fieldPrefix}-field-2`}
+              className="block text-sm font-medium text-slate-200"
+            >
               Email Address
             </label>
             <input
+              id={`${fieldPrefix}-field-2`}
               type="email"
               name="email"
               defaultValue={initialData?.email}
@@ -101,10 +115,14 @@ export default function ClientForm({
           </div>
 
           <div className="space-y-1.5">
-            <label className="block text-sm font-medium text-slate-200">
+            <label
+              htmlFor={`${fieldPrefix}-field-3`}
+              className="block text-sm font-medium text-slate-200"
+            >
               Phone Number
             </label>
             <input
+              id={`${fieldPrefix}-field-3`}
               type="tel"
               name="phone"
               defaultValue={initialData?.phone}
@@ -115,10 +133,14 @@ export default function ClientForm({
         </div>
 
         <div className="space-y-1.5">
-          <label className="block text-sm font-medium text-slate-200">
+          <label
+            htmlFor={`${fieldPrefix}-field-4`}
+            className="block text-sm font-medium text-slate-200"
+          >
             Project Scope & Notes
           </label>
           <textarea
+            id={`${fieldPrefix}-field-4`}
             name="description"
             defaultValue={initialData?.description}
             rows={3}
@@ -129,10 +151,14 @@ export default function ClientForm({
 
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6 pt-2 border-t border-slate-800/80">
           <div className="space-y-1.5">
-            <label className="block text-sm font-medium text-slate-200">
+            <label
+              htmlFor={`${fieldPrefix}-field-5`}
+              className="block text-sm font-medium text-slate-200"
+            >
               Contract Revenue ($)
             </label>
             <input
+              id={`${fieldPrefix}-field-5`}
               type="number"
               name="revenue"
               defaultValue={initialData?.revenue || 0}
@@ -143,10 +169,14 @@ export default function ClientForm({
           </div>
 
           <div className="space-y-1.5">
-            <label className="block text-sm font-medium text-slate-200">
+            <label
+              htmlFor={`${fieldPrefix}-field-6`}
+              className="block text-sm font-medium text-slate-200"
+            >
               Expenditure / Costs ($)
             </label>
             <input
+              id={`${fieldPrefix}-field-6`}
               type="number"
               name="expenditure"
               defaultValue={initialData?.expenditure || 0}
@@ -157,10 +187,14 @@ export default function ClientForm({
           </div>
 
           <div className="space-y-1.5">
-            <label className="block text-sm font-medium text-slate-200">
+            <label
+              htmlFor={`${fieldPrefix}-field-7`}
+              className="block text-sm font-medium text-slate-200"
+            >
               Status
             </label>
             <select
+              id={`${fieldPrefix}-field-7`}
               name="status"
               defaultValue={initialData?.status || 'ongoing'}
               className="w-full px-4 py-2.5 rounded-xl border border-slate-700 bg-slate-950 text-slate-200 focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500 transition-all text-sm"
@@ -186,7 +220,9 @@ export default function ClientForm({
           ) : (
             <>
               <CheckIcon className="w-4 h-4" />
-              <span>{isEditing ? 'Update Client' : 'Create Client Record'}</span>
+              <span>
+                {isEditing ? 'Update Client' : 'Create Client Record'}
+              </span>
             </>
           )}
         </button>

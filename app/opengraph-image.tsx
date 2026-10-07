@@ -189,7 +189,6 @@ export default function OpenGraphImage() {
                 backgroundColor: 'rgba(255, 255, 255, 0.05)',
               }}
             >
-              {/* eslint-disable-next-line @next/next/no-img-element */}
               <img
                 src={portraitDataUri}
                 alt="Solomon Elijah"

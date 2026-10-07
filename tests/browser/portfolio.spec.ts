@@ -3,15 +3,18 @@ import AxeBuilder from '@axe-core/playwright'
 test('public pages are accessible and have unique canonical metadata', async ({
   page,
 }) => {
+  const profile = await (await page.request.get('/profile.json')).json()
+  const canonicalUrls = new Set<string>()
+  const errors: string[] = []
+  page.on('pageerror', (error) => errors.push(error.message))
   for (const path of ['/', '/about', '/projects', '/blog', '/contact']) {
-    const errors: string[] = []
-    page.on('pageerror', (error) => errors.push(error.message))
     await page.goto(path)
     await expect(page.locator('h1')).toHaveCount(1)
-    await expect(page.locator('link[rel="canonical"]')).toHaveAttribute(
-      'href',
-      `https://solomonelijah.online${path === '/' ? '/' : path}`,
-    )
+    const canonical = new URL(
+      (await page.locator('link[rel="canonical"]').getAttribute('href'))!,
+    ).href
+    expect(canonical).toBe(new URL(path, profile.url).href)
+    canonicalUrls.add(canonical)
     expect(errors).toEqual([])
     expect(
       (
@@ -21,6 +24,7 @@ test('public pages are accessible and have unique canonical metadata', async ({
       ).violations,
     ).toEqual([])
   }
+  expect(canonicalUrls.size).toBe(5)
 })
 test('projects are readable without JavaScript and detail routes resolve', async ({
   browser,
@@ -36,6 +40,13 @@ test('projects are readable without JavaScript and detail routes resolve', async
 test('mobile navigation, project filters, and dark theme work', async ({
   page,
 }) => {
+  const profile = await (await page.request.get('/profile.json')).json()
+  const mobileCount = profile.projects.filter(
+    (project: { type: string }) => project.type === 'Mobile',
+  ).length
+  const apiCount = profile.projects.filter(
+    (project: { type: string }) => project.type === 'API',
+  ).length
   await page.setViewportSize({ width: 390, height: 844 })
   await page.goto('/')
   await page.getByRole('button', { name: 'Open navigation' }).click()
@@ -48,9 +59,10 @@ test('mobile navigation, project filters, and dark theme work', async ({
     page.getByRole('button', { name: 'Open navigation' }),
   ).toHaveAttribute('aria-expanded', 'false')
   await page.getByRole('button', { name: 'Mobile apps', exact: true }).click()
-  await expect(page.locator('.project-card')).toHaveCount(3)
+  await expect(page.locator('.project-card')).toHaveCount(mobileCount)
   await page.getByRole('button', { name: 'APIs', exact: true }).click()
-  await expect(page.locator('.empty-state')).toBeVisible()
+  await expect(page.locator('.project-card')).toHaveCount(apiCount)
+  if (!apiCount) await expect(page.locator('.empty-state')).toBeVisible()
   await page.getByRole('button', { name: 'Switch to dark theme' }).click()
   await expect(page.locator('html')).toHaveClass(/dark/)
   expect(
@@ -82,7 +94,9 @@ test('contact success and failure feedback is accurate', async ({ page }) => {
     }),
   )
   await page.getByRole('button', { name: 'Send message', exact: true }).click()
-  await expect(page.getByRole('alert')).toContainText('could not be saved')
+  await expect(page.locator('.contact-form').getByRole('alert')).toContainText(
+    'could not be saved',
+  )
   await expect(page.getByLabel('Your name')).toHaveValue('Portfolio test')
   await page.unroute('**/api/contact')
   await page.route('**/api/contact', (route) =>

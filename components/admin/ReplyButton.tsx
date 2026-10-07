@@ -1,9 +1,10 @@
 'use client'
 
-import { useState } from 'react'
+import { useState, useId } from 'react'
 import { EnvelopeIcon, ArrowPathIcon } from '@heroicons/react/24/outline'
 import { markAsReplied } from '@/app/admin/(dashboard)/contacts/actions'
 import { toast } from 'sonner'
+import { sendEmailBatches, emailResultMessage } from '@/lib/email-client'
 
 interface ReplyButtonProps {
   contact: {
@@ -15,11 +16,15 @@ interface ReplyButtonProps {
 }
 
 export default function ReplyButton({ contact }: ReplyButtonProps) {
+  const fieldPrefix = useId()
+
   const [showModal, setShowModal] = useState(false)
   const [sending, setSending] = useState(false)
+  const [unconfirmed, setUnconfirmed] = useState(false)
 
   const handleSend = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault()
+    if (sending) return
     setSending(true)
 
     const formData = new FormData(e.currentTarget)
@@ -27,22 +32,16 @@ export default function ReplyButton({ contact }: ReplyButtonProps) {
     const message = formData.get('message') as string
 
     try {
-      const res = await fetch('/api/reply', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          to: contact.email,
-          subject,
-          message,
-        }),
-      })
-
-      if (!res.ok) {
-        const data = await res.json()
-        throw new Error(data.error || 'Failed to send')
+      const result = await sendEmailBatches([contact.email], subject, message)
+      setUnconfirmed(result.uncertain.length > 0)
+      if (!result.sent.length) throw new Error(emailResultMessage(result))
+      try {
+        await markAsReplied(contact.id)
+      } catch {
+        toast.warning(
+          'The reply was sent, but its contact status could not be updated.',
+        )
       }
-
-      await markAsReplied(contact.id)
       toast.success('Reply sent successfully')
       setShowModal(false)
       window.location.reload()
@@ -56,7 +55,11 @@ export default function ReplyButton({ contact }: ReplyButtonProps) {
   return (
     <>
       <button
-        onClick={() => setShowModal(true)}
+        onClick={() => {
+          setUnconfirmed(false)
+          setShowModal(true)
+        }}
+        disabled={sending}
         className="p-2 text-slate-400 hover:text-blue-400 hover:bg-blue-500/10 rounded-lg transition-colors"
         title={`Reply to ${contact.name}`}
       >
@@ -86,12 +89,22 @@ export default function ReplyButton({ contact }: ReplyButtonProps) {
               </div>
             )}
 
+            {unconfirmed && (
+              <p role="alert" className="text-sm text-amber-300">
+                Delivery is unconfirmed. Check your email provider before
+                sending again.
+              </p>
+            )}
             <form onSubmit={handleSend} className="space-y-4">
               <div className="space-y-1.5">
-                <label className="block text-xs font-medium text-slate-300">
+                <label
+                  htmlFor={`${fieldPrefix}-field-0`}
+                  className="block text-xs font-medium text-slate-300"
+                >
                   Subject
                 </label>
                 <input
+                  id={`${fieldPrefix}-field-0`}
                   type="text"
                   name="subject"
                   defaultValue={`Re: Inquiry from ${contact.name}`}
@@ -101,10 +114,14 @@ export default function ReplyButton({ contact }: ReplyButtonProps) {
               </div>
 
               <div className="space-y-1.5">
-                <label className="block text-xs font-medium text-slate-300">
+                <label
+                  htmlFor={`${fieldPrefix}-field-1`}
+                  className="block text-xs font-medium text-slate-300"
+                >
                   Message Body
                 </label>
                 <textarea
+                  id={`${fieldPrefix}-field-1`}
                   name="message"
                   required
                   rows={5}
@@ -116,6 +133,7 @@ export default function ReplyButton({ contact }: ReplyButtonProps) {
               <div className="flex justify-end gap-3 pt-2">
                 <button
                   type="button"
+                  disabled={sending}
                   onClick={() => setShowModal(false)}
                   className="px-4 py-2 text-xs font-medium text-slate-400 hover:text-white bg-slate-900 hover:bg-slate-800 border border-slate-800 rounded-xl transition-colors"
                 >
@@ -123,10 +141,12 @@ export default function ReplyButton({ contact }: ReplyButtonProps) {
                 </button>
                 <button
                   type="submit"
-                  disabled={sending}
+                  disabled={sending || unconfirmed}
                   className="px-5 py-2 bg-blue-600 hover:bg-blue-500 text-white text-xs font-semibold rounded-xl transition-all shadow-md shadow-blue-500/20 disabled:opacity-50 flex items-center gap-1.5"
                 >
-                  {sending && <ArrowPathIcon className="w-3.5 h-3.5 animate-spin" />}
+                  {sending && (
+                    <ArrowPathIcon className="w-3.5 h-3.5 animate-spin" />
+                  )}
                   <span>{sending ? 'Sending...' : 'Send Reply'}</span>
                 </button>
               </div>

@@ -2,6 +2,7 @@
 
 import { useState, useRef, DragEvent } from 'react'
 import Image from 'next/image'
+import { safeImageUrl } from '@/lib/validation'
 import {
   CloudArrowUpIcon,
   LinkIcon,
@@ -49,7 +50,9 @@ export default function FileUpload({
 
     const isExtensionValid = /\.(jpe?g|png|webp|gif|svg)$/i.test(file.name)
     if (!allowedMime.includes(file.type.toLowerCase()) && !isExtensionValid) {
-      setError('Please choose a valid image file (JPEG, PNG, WebP, GIF, or SVG).')
+      setError(
+        'Please choose a valid image file (JPEG, PNG, WebP, GIF, or SVG).',
+      )
       return
     }
 
@@ -101,15 +104,15 @@ export default function FileUpload({
     if (!urlInput.trim()) return
     setError('')
     try {
-      const url = new URL(urlInput.trim())
-      if (!['http:', 'https:'].includes(url.protocol)) {
-        throw new Error('Please enter a valid HTTP/HTTPS URL.')
-      }
-      setPreview(urlInput.trim())
-      onUploadComplete(urlInput.trim())
+      const url = safeImageUrl(urlInput.trim())
+      if (!url) throw new Error('Unsupported image URL.')
+      setPreview(url)
+      onUploadComplete(url)
       setUrlInput('')
     } catch {
-      setError('Please enter a valid URL (e.g. https://domain.com/image.jpg)')
+      setError(
+        'Use a local image, public Supabase storage, or images.unsplash.com over HTTPS.',
+      )
     }
   }
 
@@ -129,9 +132,7 @@ export default function FileUpload({
   return (
     <div className="space-y-3">
       <div className="flex items-center justify-between">
-        <label className="text-sm font-medium text-slate-200">
-          {label}
-        </label>
+        <p className="text-sm font-medium text-slate-200">{label}</p>
         {preview && (
           <div className="flex items-center gap-2">
             <button
@@ -229,6 +230,19 @@ export default function FileUpload({
 
           {activeTab === 'upload' ? (
             <div
+              role="button"
+              tabIndex={uploading ? -1 : 0}
+              aria-label="Upload an image"
+              aria-disabled={uploading}
+              onKeyDown={(event) => {
+                if (
+                  !uploading &&
+                  (event.key === 'Enter' || event.key === ' ')
+                ) {
+                  event.preventDefault()
+                  fileInputRef.current?.click()
+                }
+              }}
               onDragOver={(e) => {
                 e.preventDefault()
                 setDragOver(true)
@@ -250,7 +264,9 @@ export default function FileUpload({
                 )}
               </div>
               <p className="text-sm font-medium text-slate-200">
-                {uploading ? 'Uploading to cloud...' : 'Click to upload or drag & drop'}
+                {uploading
+                  ? 'Uploading to cloud...'
+                  : 'Click to upload or drag & drop'}
               </p>
               <p className="text-xs text-slate-400 mt-1">
                 PNG, JPG, WebP, GIF or SVG up to 10 MB
@@ -261,6 +277,7 @@ export default function FileUpload({
               <div className="flex gap-2">
                 <div className="relative flex-1">
                   <input
+                    aria-label={`${label} URL`}
                     type="url"
                     value={urlInput}
                     onChange={(e) => setUrlInput(e.target.value)}
@@ -270,7 +287,7 @@ export default function FileUpload({
                         handleUrlApply()
                       }
                     }}
-                    placeholder="https://example.com/screenshot.png"
+                    placeholder="https://images.unsplash.com/photo-example"
                     className="w-full pl-9 pr-3 py-2 text-sm bg-slate-950 border border-slate-700 rounded-lg text-slate-200 placeholder-slate-500 focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500"
                   />
                   <PhotoIcon className="w-4 h-4 text-slate-500 absolute left-3 top-2.5" />
@@ -285,7 +302,8 @@ export default function FileUpload({
                 </button>
               </div>
               <p className="text-xs text-slate-400">
-                Directly link an image hosted on Cloudinary, Supabase, Unsplash, or CDN.
+                Use a local image path, public Supabase storage, or an HTTPS
+                image from images.unsplash.com.
               </p>
             </div>
           )}
@@ -295,6 +313,7 @@ export default function FileUpload({
       {/* Hidden file input for file selection */}
       <input
         ref={fileInputRef}
+        aria-label={`${label} file`}
         type="file"
         accept="image/png,image/jpeg,image/webp,image/gif,image/svg+xml"
         onChange={(e) => {
