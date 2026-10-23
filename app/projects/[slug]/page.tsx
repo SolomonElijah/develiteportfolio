@@ -90,6 +90,22 @@ export default async function ProjectDetailPage({ params }: Props) {
               {project.type.toUpperCase()} DEVELOPMENT / CASE STUDY
             </p>
             <h1>{project.title}</h1>
+            <div className="detail-actions">
+              {project.demo_url ? (
+                <a
+                  href={project.demo_url}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="button"
+                >
+                  View live project <Arrow diagonal />
+                </a>
+              ) : (
+                <Link href="/contact" className="button button-outline">
+                  Request a walkthrough <Arrow />
+                </Link>
+              )}
+            </div>
             <p>{project.description}</p>
           </header>
           <div className="detail-image">
@@ -215,16 +231,7 @@ export default async function ProjectDetailPage({ params }: Props) {
                   <span key={tech}>{tech}</span>
                 ))}
               </div>
-              {project.demo_url ? (
-                <a
-                  href={project.demo_url}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="button"
-                >
-                  Visit project <Arrow diagonal />
-                </a>
-              ) : (
+              {!project.demo_url && (
                 <p>
                   A public demo is not linked for this project. Get in touch to
                   discuss its implementation.

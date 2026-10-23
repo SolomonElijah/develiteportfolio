@@ -36,6 +36,22 @@ export default function ProjectCard({
       <h3>
         <Link href={href}>{project.title}</Link>
       </h3>
+      <div className="project-actions">
+        {project.demo_url && (
+          <a
+            href={project.demo_url}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="button button-small"
+            aria-label={`View ${project.title} live project`}
+          >
+            View live project <Arrow diagonal />
+          </a>
+        )}
+        <Link href={href} className="text-link">
+          Case study <Arrow />
+        </Link>
+      </div>
       <p>{project.description}</p>
       <div className="tags">
         {project.stack.slice(0, 3).map((tech) => (
@@ -47,9 +63,6 @@ export default function ProjectCard({
           </span>
         ))}
       </div>
-      <Link href={href} className="text-link">
-        Explore case study <Arrow />
-      </Link>
     </article>
   )
 }

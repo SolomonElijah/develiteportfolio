@@ -848,8 +848,18 @@ svg {
   border-color: var(--accent);
   color: var(--accent);
 }
-.project-card > .text-link {
-  margin-top: 18px;
+.project-actions,
+.detail-actions {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 12px 18px;
+}
+.project-actions {
+  margin-block: 16px;
+}
+.project-actions .text-link {
+  min-height: 44px;
   font-size: 12px;
 }
 .about-section {
@@ -1178,6 +1188,9 @@ svg {
   font-size: clamp(34px, 4.3vw, 58px);
   margin-top: 16px;
   line-height: 1.15;
+}
+.detail-actions {
+  margin-top: 24px;
 }
 .detail-header > p {
   max-width: 800px;
