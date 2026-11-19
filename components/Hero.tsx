@@ -7,9 +7,10 @@ export default function Hero() {
     <section className="container hero" aria-labelledby="hero-title">
       <div className="hero-copy">
         <div className="eyebrow">
-          <span className="status-dot" /> FULL-STACK · MOBILE (RN & FLUTTER) · BACKEND
+          <span className="status-dot" /> FULL-STACK · MOBILE APP ·
+          BACKEND
         </div>
-        <p className="hero-intro">Hello, I’m Elijah.</p>
+        <p className="hero-intro">Hello, I’m {developer.name}.</p>
         <h1 id="hero-title">
           I build software
           <br />
@@ -17,13 +18,16 @@ export default function Hero() {
           <span className="accent">.</span>
         </h1>
         <p className="hero-description">
-          Full-stack software developer building reliable web applications,
-          cross-platform mobile apps (React Native & Flutter), and scalable backend
-          APIs with modern architectures.
+          I’m a full-stack software developer helping businesses and product
+          teams turn ideas into reliable web applications, cross-platform mobile
+          apps, and backend APIs.
         </p>
 
         <div className="hero-actions">
-          <Link href="/projects" className="button">
+          <Link href="/contact" className="button">
+            Hire me <Arrow diagonal />
+          </Link>
+          <Link href="/projects" className="button button-outline">
             Explore my work <Arrow />
           </Link>
           <a
